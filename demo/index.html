@@ -1,28 +1,164 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>skeleton-auth demo</title>
+  <title>skeleton-auth demo</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../skeleton-auth.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
+  <link rel="import" href="../../polymer/lib/elements/custom-style.html">
+  <link rel="import" href="../../polymer/lib/elements/dom-if.html">
+  <link rel="import" href="../../polymerfire/polymerfire.html">
+  <link rel="import" href="../../paper-button/paper-button.html">
+  <link rel="import" href="../../paper-item/paper-item.html">
+  <link rel="import" href="../../paper-item/paper-item-body.html">
+  <link rel="import" href="../../paper-item/paper-icon-item.html">
+  <link rel="import" href="../../iron-icons/iron-icons.html">
+  <link rel="import" href="../../iron-icons/communication-icons.html">
+  <link rel="import" href="../../iron-image/iron-image.html">
 
+  <link rel="import" href="../skeleton-auth.html">
+
+  <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
+      html,
+      body {
+        font-family: "Roboto", sans-serift;
+        margin: 0;
+        padding: 0;
+        background: white;
+      }
+
+      paper-icon-item {
+        --paper-item-icon-width: 50px;
+      }
+
+      paper-button {
+        color: white;
+        background-color: var(--paper-red-500);
+        margin-top: 2rem;
+      }
+
+      #userBox {
+        display: block;
+      }
+
+      iron-image {
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+      }
+
+      .container {
+        margin: 0 auto;
+        padding: 1rem;
+        max-width: 500px;
+      }
+
+      h3 {
+        border-bottom: 1px solid var(--paper-grey-400);
+        padding-bottom: 1rem;
+        margin-bottom: 5rem;
+      }
+
+      skeleton-auth {
+        --auth-button: {
+          display: block;
+          text-align: left;
+          border-radius: 20px;
+          margin: 1rem;
+          padding: 10px 15px;
+        };
+      }
     </style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic skeleton-auth demo</h3>
-      <demo-snippet>
+  </custom-style>
+</head>
+<body>
+<div class="container">
+  <h3 class="paper-font-display1">Basic skeleton-auth demo</h3>
+
+  <dom-bind>
+    <template>
+      <!-- Configure Firebase app: -->
+      <firebase-app
+        auth-domain="fir-832aa.firebaseapp.com"
+        database-url="https://fir-832aa.firebaseio.com"
+        api-key="AIzaSyAySj33xpp26K-_cvU6pPsyTBVz4rzm3xk"
+        storage-bucket="fir-832aa.appspot.com"
+      ></firebase-app>
+
+      <firebase-auth
+        signed-in="{{signedIn}}"
+        user="{{user}}"
+        on-error="handleError">
+      </firebase-auth>
+
+      <dom-if if="[[!signedIn]]">
         <template>
-          <skeleton-auth></skeleton-auth>
+          <skeleton-auth google facebook twitter github anonymous email on-error="handleError">
+          </skeleton-auth>
         </template>
-      </demo-snippet>
-    </div>
-  </body>
+      </dom-if>
+
+
+      <dom-if if="[[signedIn]]">
+        <template>
+          <div id="userBox">
+            <paper-icon-item>
+              <iron-image placeholder="http://lorempixel.com/100/100"
+                          sizing="cover" preload src$="[[user.photoURL]]" slot="item-icon"></iron-image>
+              <paper-item-body>
+                [[user.displayName]]
+              </paper-item-body>
+            </paper-icon-item>
+
+            <paper-icon-item>
+              <iron-icon icon="communication:email" slot="item-icon"></iron-icon>
+              <paper-item-body>
+                [[user.email]]
+              </paper-item-body>
+            </paper-icon-item>
+
+            <paper-icon-item>
+              <iron-icon icon="verified-user" slot="item-icon"></iron-icon>
+              <paper-item-body>
+                [[user.emailVerified]]
+              </paper-item-body>
+            </paper-icon-item>
+
+            <paper-icon-item>
+              <div slot="item-icon">uid</div>
+              <paper-item-body>
+                <div>[[user.uid]]</div>
+              </paper-item-body>
+            </paper-icon-item>
+
+            <paper-button onclick="signOut()">Sign Out</paper-button>
+          </div>
+
+        </template>
+      </dom-if>
+
+      <script>
+        const domIf = document.querySelector("dom-if");
+        domIf.if = false;
+
+        function signOut() {
+          const element = document.querySelector("skeleton-auth");
+          element.signOut();
+        }
+
+        function jsonLog(object) {
+          console.log(object);
+        }
+      </script>
+    </template>
+  </dom-bind>
+</div>
+</body>
 </html>
