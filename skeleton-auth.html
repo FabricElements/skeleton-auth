@@ -1,0 +1,38 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<!--<link rel="import" href="../polymer/lib/elements/dom-if.html">-->
+<!--<link rel="import" href="../polymer/lib/elements/dom-repeat.html">-->
+
+<!--
+`skeleton-auth`
+Minimal Sign in module using polymer and firebase
+
+@demo demo/index.html
+-->
+
+<dom-module id="skeleton-auth">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /** @polymerElement */
+    class SkeletonAuth extends Polymer.Element {
+      static get is() { return 'skeleton-auth'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'skeleton-auth'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(MyElement.is, MyElement);
+  </script>
+</dom-module>
