@@ -15,6 +15,7 @@
   <link rel="import" href="../../polymer/lib/elements/dom-if.html">
   <link rel="import" href="../../polymerfire/polymerfire.html">
   <link rel="import" href="../../paper-button/paper-button.html">
+  <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-item/paper-item.html">
   <link rel="import" href="../../paper-item/paper-item-body.html">
   <link rel="import" href="../../paper-item/paper-icon-item.html">
@@ -138,7 +139,10 @@
               </paper-item-body>
             </paper-icon-item>
 
+            <paper-input readonly label="token" id="token"></paper-input>
+
             <paper-button onclick="signOut()">Sign Out</paper-button>
+            <paper-button onclick="getToken()">Get token</paper-button>
           </div>
 
         </template>
@@ -155,6 +159,14 @@
 
         function jsonLog(object) {
           console.log(object);
+        }
+
+        function getToken() {
+          firebase.auth().currentUser.getToken(true).then(function(token) {
+//            console.log('with ID token', token);
+            const element = document.querySelector("#token");
+            element.value = token;
+          }.bind(this));
         }
       </script>
     </template>
