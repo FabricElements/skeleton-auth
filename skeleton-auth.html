@@ -1,141 +1,127 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../polymer/lib/elements/custom-style.html">
-
-<!-- Basic requirements -->
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-styles/classes/typography.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
-
-<!-- Internal imports -->
-<link rel="import" href="auth-behavior.html">
-<link rel="import" href="icons.html">
-
-<!--
-`skeleton-auth`
-Minimal Sign in module using polymer and firebase
-
-@demo demo/index.html
--->
+<link rel="import" href="./auth-mixin.html">
+<link rel="import" href="./icons.html">
 
 <dom-module id="skeleton-auth">
   <template strip-whitespace>
-    <custom-style>
-      <style>
-        :host {
-          display: block;
-          overflow-y: auto;
-          margin: 0 1rem;
-          padding: 1rem 0;
-          --login-button: {
-          };
-        }
+    <style is="custom-style">
+      :host {
+        display: block;
+        overflow-y: auto;
+        margin: 0 1rem;
+        padding: 1rem 0;
+        --login-button: {
+        };
+      }
 
-        a {
-          text-decoration: none;
-        }
+      a {
+        text-decoration: none;
+      }
 
-        a:hover {
-          text-decoration: underline;
-        }
+      a:hover {
+        text-decoration: underline;
+      }
 
-        paper-button {
-          @apply --auth-button;
-        }
+      paper-button {
+        @apply --auth-button;
+      }
 
-        paper-button:not([disabled]) {
-          color: white;
-        }
+      paper-button:not([disabled]) {
+        color: white;
+      }
 
-        paper-button:last-child {
-          margin-bottom: 0;
-        }
+      paper-button:last-child {
+        margin-bottom: 0;
+      }
 
-        paper-button.google:not([disabled]) {
-          background: var(--button-google-color, var(--paper-red-a200));
-        }
+      paper-button.google:not([disabled]) {
+        background: var(--button-google-color, var(--paper-red-a200));
+      }
 
-        paper-button.facebook:not([disabled]) {
-          background: var(--button-facebook-color, var(--paper-indigo-a200));
-        }
+      paper-button.facebook:not([disabled]) {
+        background: var(--button-facebook-color, var(--paper-indigo-a200));
+      }
 
-        paper-button.twitter:not([disabled]) {
-          background: var(--button-twitter-color, var(--paper-blue-a200));
-        }
+      paper-button.twitter:not([disabled]) {
+        background: var(--button-twitter-color, var(--paper-blue-a200));
+      }
 
-        paper-button.github:not([disabled]) {
-          background: var(--button-github-color, var(--paper-grey-900));
-        }
+      paper-button.github:not([disabled]) {
+        background: var(--button-github-color, var(--paper-grey-900));
+      }
 
-        paper-button.anonymous:not([disabled]) {
-          background: var(--button-anonymous-color, var(--paper-grey-700));
-        }
+      paper-button.anonymous:not([disabled]) {
+        background: var(--button-anonymous-color, var(--paper-grey-700));
+      }
 
-        paper-button.email:not([disabled]) {
-          background: var(--button-email-color, var(--paper-grey-800));
-        }
+      paper-button.email:not([disabled]) {
+        background: var(--button-email-color, var(--paper-grey-800));
+      }
 
-        paper-button iron-icon {
-          margin-right: 10px;
-          --iron-icon-size: 16px;
-        }
+      paper-button iron-icon {
+        margin-right: 10px;
+        --iron-icon-size: 16px;
+      }
 
-        paper-button span {
-          vertical-align: middle;
-          text-transform: none;
-        }
+      paper-button span {
+        vertical-align: middle;
+        text-transform: none;
+      }
 
-        #email-login {
-          text-align: left;
-          margin-bottom: 4rem;
-        }
+      #email-login {
+        text-align: left;
+        margin-bottom: 4rem;
+      }
 
-        hr {
-          border: 1px solid var(--divider-color, #FAFAFA);
-          margin: 4rem 0 2rem 0;
-        }
+      hr {
+        border: 1px solid var(--divider-color, #FAFAFA);
+        margin: 4rem 0 2rem 0;
+      }
 
-        .m-b-1 {
-          margin-bottom: 1rem;
-        }
+      .m-b-1 {
+        margin-bottom: 1rem;
+      }
 
-        #auth-container {
-          overflow: hidden;
-        }
+      #auth-container {
+        overflow: hidden;
+      }
 
-        #auth-container,
-        #buttons,
-        #email-box {
-          overflow: hidden;
-          transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-          will-change: max-height, opacity;
-        }
+      #auth-container,
+      #buttons,
+      #email-box {
+        overflow: hidden;
+        transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: max-height, opacity;
+      }
 
-        #buttons {
-          max-height: 1000px;
-          opacity: 1;
-        }
+      #buttons {
+        max-height: 1000px;
+        opacity: 1;
+      }
 
-        #email-box {
-          max-height: 0px;
-          opacity: 0;
-        }
+      #email-box {
+        max-height: 0px;
+        opacity: 0;
+      }
 
-        .email-open-true {
+      .email-open-true {
 
-        }
+      }
 
-        .email-open-true #buttons {
-          max-height: 0;
-          opacity: 0;
-        }
+      .email-open-true #buttons {
+        max-height: 0;
+        opacity: 0;
+      }
 
-        .email-open-true #email-box {
-          max-height: 1000px;
-          opacity: 1;
-        }
-      </style>
-    </custom-style>
+      .email-open-true #email-box {
+        max-height: 1000px;
+        opacity: 1;
+      }
+    </style>
 
     <div id="auth-container" class$="email-open-[[emailOpen]]">
       <nav id="buttons">
@@ -209,13 +195,17 @@ Minimal Sign in module using polymer and firebase
 
   <script>
     /**
+     * `skeleton-auth`
+     * Minimal Sign in module using polymer and firebase
+     *
+     * @demo demo/index.html
      * @polymerElement
      * @constructor
      * @extends Polymer.Element
-     * @implements {Fabric_AuthBehavior}
      * @property google {boolean}
      * */
-    class SkeletonAuth extends Fabric.AuthBehavior(Polymer.Element) {
+
+    class SkeletonAuth extends Fabric.AuthMixin(Polymer.Element) {
       static get is() {
         return 'skeleton-auth';
       }

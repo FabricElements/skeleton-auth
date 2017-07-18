@@ -1,36 +1,20 @@
-<link rel="import" href="../polymerfire/firebase-auth.html">
+<link rel="import" href="../polymerfire/firebase-auth-script.html">
 
-<!--
-@license
-Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 <script>
-  (function () {
-    'use strict';
+  (() => {
 
     /**
-     * Base class that provides the core API for Polymer's meta-programming
-     * features including template stamping, data-binding, attribute deserialization,
-     * and property change observation.
+     * Fabric.AuthMixin
      *
-     * @polymerBehavior
+     * @polymerMixin
      * @memberOf Fabric
      * @constructor
      * @summary Custom element base class that provides the core API for
      * @property google {boolean}
      */
-    const AuthBehavior = function (superClass) {
+    const AuthMixin = (baseClass) => {
 
-      return class extends superClass {
-
-        constructor() {
-          super();
-        }
+      return class extends baseClass {
 
         static get properties() {
           return {
@@ -93,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               reflectToAttribute: true,
               value: null
             }
-          }
+          };
         }
 
         static get observers() {
@@ -104,7 +88,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * Google Sign-in function.
          */
         signInGoogle() {
-          var provider = new firebase.auth.GoogleAuthProvider();
+          const provider = new firebase.auth.GoogleAuthProvider();
           this._signIn(provider);
         }
 
@@ -112,7 +96,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * Facebook Sign-in function.
          */
         signInFacebook() {
-          var provider = new firebase.auth.FacebookAuthProvider();
+          const provider = new firebase.auth.FacebookAuthProvider();
           this._signIn(provider);
         }
 
@@ -120,7 +104,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * Twitter Sign-in function.
          */
         signInTwitter() {
-          var provider = new firebase.auth.TwitterAuthProvider();
+          const provider = new firebase.auth.TwitterAuthProvider();
           this._signIn(provider);
         }
 
@@ -128,7 +112,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * GitHub Sign-in function.
          */
         signInGitHub() {
-          var provider = new firebase.auth.GithubAuthProvider();
+          const provider = new firebase.auth.GithubAuthProvider();
           this._signIn(provider);
         }
 
@@ -136,9 +120,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * Anonymous Sign-in function.
          */
         signInAnonymously() {
-          firebase.auth().signInAnonymously().then((result) => {
-//            console.log("you are logged");
-          }).catch((error) => {
+          firebase.auth().signInAnonymously().catch(error => {
             this.error = error;
           });
         }
@@ -147,12 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * Sign In the user.
          */
         _signIn(provider) {
-          firebase.auth().signInWithPopup(provider).then((result) => {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            //var token = result.credential.accessToken;
-            // The signed-in user info.
-            //var user = result.user;
-          }).catch((error) => {
+          firebase.auth().signInWithRedirect(provider).catch(error => {
             this.error = error;
           });
         }
@@ -183,17 +160,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          */
         signOut() {
           this.error = null;
-          firebase.auth().signOut().then(() => {
-//            console.log('Signed Out');
-          }, (error) => {
+          firebase.auth().signOut().catch(error => {
             this.error = error;
           });
         }
 
-      }
+      };
     };
 
     window.Fabric = window.Fabric || {};
-    Fabric.AuthBehavior = AuthBehavior;
+    Fabric.AuthMixin = AuthMixin;
   })();
 </script>
