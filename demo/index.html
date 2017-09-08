@@ -80,6 +80,7 @@
   </custom-style>
 </head>
 <body>
+<span id="recaptcha"></span>
 <div class="container">
   <h3 class="paper-font-display1">Basic skeleton-auth demo</h3>
 
@@ -87,10 +88,11 @@
     <template>
       <!-- Configure Firebase app: -->
       <firebase-app
-        auth-domain="fir-832aa.firebaseapp.com"
-        database-url="https://fir-832aa.firebaseio.com"
-        api-key="AIzaSyAySj33xpp26K-_cvU6pPsyTBVz4rzm3xk"
-        storage-bucket="fir-832aa.appspot.com"
+        auth-domain="fabricelements.firebaseapp.com"
+        database-url="https://fabricelements.firebaseio.com"
+        api-key="AIzaSyCJRNdR0eodnswyi8MHCtF1YOjY235mhM8"
+        storage-bucket="fabricelements.appspot.com"
+        messagingSenderId="908593247251"
       ></firebase-app>
 
       <firebase-auth
@@ -101,7 +103,7 @@
 
       <dom-if if="[[!signedIn]]">
         <template>
-          <skeleton-auth google facebook twitter github anonymous email on-error="handleError">
+          <skeleton-auth google facebook twitter github anonymous email phone on-error="handleError" recaptcha-container="recaptcha">
           </skeleton-auth>
         </template>
       </dom-if>
@@ -162,7 +164,7 @@
         }
 
         function getToken() {
-          firebase.auth().currentUser.getToken(true).then(function(token) {
+          firebase.auth().currentUser.getIdToken(true).then(function(token) {
 //            console.log('with ID token', token);
             const element = document.querySelector("#token");
             element.value = token;

@@ -1,21 +1,70 @@
-# \<skeleton-auth\>
+## \<skeleton-auth\>
 
-Minimal Sign in module using polymer and firebase
+`skeleton-auth` is a [Polymer 2](http://polymer-project.org) and [Firebase](https://firebase.google.com/) minimal Sign-in module.
 
-## Install the Polymer-CLI
+## Installation
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+Install skeleton-auth with Bower
 
-## Viewing Your Element
-
-```
-$ polymer serve
+```shell
+$ bower install --save FabricElements/skeleton-auth
 ```
 
-## Running Tests
+## Usage
 
-```
-$ polymer test
+Import it into the `<head>` of your page
+
+```html
+<link rel="import" href="bower_components/skeleton-auth/skeleton-auth.html">
 ```
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+### Example: basic usage
+
+Configure your Firebase app
+
+```html
+<firebase-app
+  apiKey="AIzaSyCJRNdR0eodnswyi8MHCtF1YOjY235mhM8"
+  authDomain="fabricelements.firebaseapp.com"
+  databaseURL="https://fabricelements.firebaseio.com"
+  storageBucket="fabricelements.appspot.com"
+  messagingSenderId="908593247251"
+></firebase-app>
+
+<firebase-auth
+  signed-in="{{signedIn}}"
+  user="{{user}}"
+  on-error="handleError">
+</firebase-auth>
+```
+* `signedIn` (boolean) - True if the client is authenticated, and false if the client is not authenticated.
+* `user` (object) - The currently-authenticated user with user-related metadata.
+
+> See [Polymerfire](https://www.webcomponents.org/element/firebase/polymerfire/) docs for more information.
+
+Then add the `skeleton-auth` element with the selected providers.
+
+```html
+<span id="recaptcha"></span>
+
+<skeleton-auth google facebook twitter github anonymous email phone on-error="handleError" recaptcha-container="recaptcha"></skeleton-auth>
+```
+
+* `recaptcha-container` - The Google reCAPTCHA doesn't work inside shadow dom, has to be placed it inside a container in the top document so it can be rendered.
+
+* Available providers:
+  * Google Sign-In
+  * Facebook Login
+  * Twitter
+  * GitHub
+  * Anonymous
+  * Password Authentication
+  * Phone Number
+
+## Contributing
+
+Please check [CONTRIBUTING](./CONTRIBUTING.md).
+
+## License
+
+Released under the [BSD 3-Clause License](./LICENSE.md).
