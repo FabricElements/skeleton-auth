@@ -30,7 +30,9 @@ Or... If you are filing an issue to report a bug, be sure to provide:
 * A succinct description of the design used to fix any related issues.
 * At least one test for each bug fixed or feature added as part of the pull request.
 
-If a proposed change contains multiple commits, please **squash commits to as few as is necessary** to succinctly express the change.
+If a proposed change contains multiple commits, please **squash commits to as few as is necessary** to succinctly express the change. 
+
+We really appreciate your interest in contributing and improving the project.
 
 ## Squashing commits
 
@@ -50,5 +52,3 @@ Helpful hint: You can always edit your last commit message, before pushing, by u
 
 ### See also:
 [Git Book Chapter 6.4: Git Tools - Rewriting History](http://git-scm.com/book/en/Git-Tools-Rewriting-History)
-
-We really appreciate your interest in contributing and improving the project.

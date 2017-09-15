@@ -151,24 +151,42 @@
       </dom-if>
 
       <script>
-        const domIf = document.querySelector("dom-if");
+        /* eslint-disable no-unused-vars*/
+
+        const domIf = document.querySelector('dom-if');
         domIf.if = false;
 
+        /**
+         * Sign Out
+         *
+         * @private
+         */
         function signOut() {
-          const element = document.querySelector("skeleton-auth");
+          const element = document.querySelector('skeleton-auth');
           element.signOut();
         }
-
+        
+        /**
+         * jsonLog
+         *
+         * @param {Object} object
+         * @private
+         */
         function jsonLog(object) {
           console.log(object);
         }
 
+        /**
+         * Get Token
+         *
+         * @private
+         */
         function getToken() {
           firebase.auth().currentUser.getIdToken(true).then(function(token) {
 //            console.log('with ID token', token);
-            const element = document.querySelector("#token");
+            const element = document.querySelector('#token');
             element.value = token;
-          }.bind(this));
+          });
         }
       </script>
     </template>

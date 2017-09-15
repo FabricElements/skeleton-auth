@@ -1,287 +1,307 @@
 <link rel="import" href="../polymerfire/firebase-auth-script.html">
 
 <script>
-  (() => {
+  window.Fabric = window.Fabric || {};
 
-    /**
-     * Fabric.AuthMixin
-     *
-     * @polymerMixin
-     * @memberOf Fabric
-     * @constructor
-     * @summary Custom element base class that provides the core API for
-     * @property google {boolean}
-     */
-    const AuthMixin = (baseClass) => {
+  /**
+   * Fabric.AuthMixin
+   *
+   * @polymerMixin
+   * @memberOf Fabric
+   * @constructor
+   * @summary Custom element base class that provides the core API for
+   * @property {boolean} google
+   * @param {Function} baseClass
+   */
+  Fabric.AuthMixin = (baseClass) => {
+    return class extends baseClass {
+      /**
+       * @return {object}
+       */
+      static get properties() {
+        return {
+          /**
+           * Allow Google Sign-in.
+           */
+          google: {
+            type: Boolean,
+            notify: true,
+            value: false,
+          },
+          /**
+           * Allow Facebook Sign-in.
+           */
+          facebook: {
+            type: Boolean,
+            notify: true,
+            value: false,
+          },
+          /**
+           * Allow Twitter Sign-in.
+           */
+          twitter: {
+            type: Boolean,
+            notify: true,
+            value: false,
+          },
+          /**
+           * Allow GitHub Sign-in.
+           */
+          github: {
+            type: Boolean,
+            notify: true,
+            value: false,
+          },
+          /**
+           * Allow Email Sign-in.
+           */
+          email: {
+            type: Boolean,
+            notify: true,
+            value: false,
+          },
 
-      return class extends baseClass {
+          /**
+           * Allow anonymous Sign-in.
+           */
+          anonymous: {
+            type: Boolean,
+            notify: true,
+            value: false,
+          },
 
-        static get properties() {
-          return {
-            /**
-             * Allow Google Sign-in.
-             */
-            google: {
-              type: Boolean,
-              notify: true,
-              value: false
-            },
-            /**
-             * Allow Facebook Sign-in.
-             */
-            facebook: {
-              type: Boolean,
-              notify: true,
-              value: false
-            },
-            /**
-             * Allow Twitter Sign-in.
-             */
-            twitter: {
-              type: Boolean,
-              notify: true,
-              value: false
-            },
-            /**
-             * Allow GitHub Sign-in.
-             */
-            github: {
-              type: Boolean,
-              notify: true,
-              value: false
-            },
-            /**
-             * Allow Email Sign-in.
-             */
-            email: {
-              type: Boolean,
-              notify: true,
-              value: false
-            },
+          /**
+           * Allow phone number Sign-in.
+           */
+          phone: {
+            type: Boolean,
+            notify: true,
+            value: false,
+          },
 
-            /**
-             * Allow anonymous Sign-in.
-             */
-            anonymous: {
-              type: Boolean,
-              notify: true,
-              value: false
-            },
+          /**
+           * Error
+           */
+          error: {
+            type: Object,
+            notify: true,
+            reflectToAttribute: true,
+            value: null,
+          },
+        };
+      }
 
-            /**
-             * Allow phone number Sign-in.
-             */
-            phone: {
-              type: Boolean,
-              notify: true,
-              value: false
-            },
+      /**
+       * Constructor
+       */
+      constructor() {
+        super();
+        firebase.auth().getRedirectResult().catch((error) => {
+          if (error.code === 'auth/account-exists-with-different-credential') {
+            this.userEmail = error.email;
+            this.fetchEmailProviders();
+          }
+        });
+      }
 
-            /**
-             * Error
-             */
-            error: {
-              type: Object,
-              notify: true,
-              reflectToAttribute: true,
-              value: null
+      /**
+       * Google Sign-in function.
+       */
+      signInGoogle() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        this._signIn(provider);
+      }
+
+      /**
+       * Facebook Sign-in function.
+       */
+      signInFacebook() {
+        const provider = new firebase.auth.FacebookAuthProvider();
+        this._signIn(provider);
+      }
+
+      /**
+       * Twitter Sign-in function.
+       */
+      signInTwitter() {
+        const provider = new firebase.auth.TwitterAuthProvider();
+        this._signIn(provider);
+      }
+
+      /**
+       * GitHub Sign-in function.
+       */
+      signInGitHub() {
+        const provider = new firebase.auth.GithubAuthProvider();
+        this._signIn(provider);
+      }
+
+      /**
+       * Anonymous Sign-in function.
+       */
+      signInAnonymously() {
+        firebase.auth().signInAnonymously().catch((error) => {
+          this.error = error;
+        });
+      }
+
+      /**
+       * Sign In the user.
+       *
+       *  @param {Object} provider
+       */
+      _signIn(provider) {
+        firebase.auth().signInWithRedirect(provider).catch((error) => {
+          this.error = error;
+        });
+      }
+
+      /**
+       * Checks if there's any provider for the given email
+       *
+       *  @param {Object} e
+       */
+      fetchEmailProviders(e) {
+        if (e) e.preventDefault();
+
+        firebase
+          .auth()
+          .fetchProvidersForEmail(this.userEmail)
+          .then((data) => {
+            this.availableProviders = {
+              password: data.includes('password'),
+              google: data.includes('google.com'),
+              facebook: data.includes('facebook.com'),
+              twitter: data.includes('twitter.com'),
+              github: data.includes('github.com'),
+            };
+
+            if (data.length === 0) {
+              /** 
+               * Show account creation form if the email 
+               * is not registered in our database
+               */
+              this.openView = 'email-signup';
+            } else {
+              /** 
+               * If there's any provider option 
+               * for this email, show the options 
+               */
+              this.openView = 'email-providers';
             }
-          };
-        }
-
-        constructor() {
-          super();
-          firebase.auth().getRedirectResult().catch(error => {
-            if (error.code = 'auth/account-exists-with-different-credential') {
-              this.userEmail = error.email
-              this.fetchEmailProviders()
-            }
-
-          })
-        }
-
-        static get observers() {
-//          return ['_barChanged(hello)']
-        }
-
-        /**
-         * Google Sign-in function.
-         */
-        signInGoogle() {
-          const provider = new firebase.auth.GoogleAuthProvider();
-          this._signIn(provider);
-        }
-
-        /**
-         * Facebook Sign-in function.
-         */
-        signInFacebook() {
-          const provider = new firebase.auth.FacebookAuthProvider();
-          this._signIn(provider);
-        }
-
-        /**
-         * Twitter Sign-in function.
-         */
-        signInTwitter() {
-          const provider = new firebase.auth.TwitterAuthProvider();
-          this._signIn(provider);
-        }
-
-        /**
-         * GitHub Sign-in function.
-         */
-        signInGitHub() {
-          const provider = new firebase.auth.GithubAuthProvider();
-          this._signIn(provider);
-        }
-
-        /**
-         * Anonymous Sign-in function.
-         */
-        signInAnonymously() {
-          firebase.auth().signInAnonymously().catch(error => {
+          }).catch((error) => {
             this.error = error;
           });
-        }
+      }
 
-        /**
-         * Sign In the user.
-         */
-        _signIn(provider) {
-          firebase.auth().signInWithRedirect(provider).catch(error => {
-            this.error = error;
-          });
-        }
+      /**
+       * Sign In with email and password.
+       *
+       *  @param {Object} e
+       */
+      signInWithEmailAndPassword(e) {
+        firebase.auth()
+        .signInWithEmailAndPassword(this.userEmail, this.userPassword)
+        .catch((error) => {
+          this.error = error;
+        });
+        this.userEmail = null;
+        this.userPassword = null;
+      }
 
-        /**
-         * Checks if there's any provider for the given email
-         */
-        fetchEmailProviders(e) {
-          if (e) e.preventDefault();
+      /**
+       * Password reset.
+       */
+      passwordReset() {
+        firebase.auth().sendPasswordResetEmail(this.userEmail)
+        .then(() => {
+          this.openView = 'email-sent';
+        }).catch((error) => {
+          this.error = error;
+        });
+      }
 
-          firebase
-            .auth()
-            .fetchProvidersForEmail(this.userEmail)
-            .then((data) => {
-              this.availableProviders = {
-                password: data.includes('password'),
-                google: data.includes('google.com'),
-                facebook: data.includes('facebook.com'),
-                twitter: data.includes('twitter.com'),
-                github: data.includes('github.com')
-              }
-
-              if (data.length === 0) {
-                // Show account creation form if the email is not registered in our database
-                this.openView = 'email-signup'
-              } else {
-                // If there's any provider option for this email, show the options
-                this.openView = 'email-providers'
-              }
-            }).catch((error) => {
-              this.error = error
-            })
-        }
-
-        /**
-         * Sign In with email and password.
-         */
-        signInWithEmailAndPassword(e) {
-          firebase.auth().signInWithEmailAndPassword(this.userEmail, this.userPassword).catch(error => {
-            this.error = error;
-          });
+      /**
+       * Create user with email and password.
+       */
+      createUserWithEmailAndPassword() {
+        firebase.auth()
+        .createUserWithEmailAndPassword(this.userEmail, this.userPassword)
+        .then((user) => {
           this.userEmail = null;
           this.userPassword = null;
-        }
-
-        /**
-         * Password reset.
-         */
-        passwordReset() {
-          firebase.auth().sendPasswordResetEmail(this.userEmail)
-          .then(() => {
-            this.openView = 'email-sent';
-          }).catch(error => {
-            this.error = error;
+          return firebase.auth().currentUser.updateProfile({
+            displayName: this.userName,
           });
+        })
+        .catch((error) => {
+          this.error = error;
+          this.userPassword = null;
+        });
+      }
+
+      /**
+       * Sign In with phone number.
+       */
+      signInWithPhone() {
+        const recaptchaContainer = document.getElementById(
+          this.recaptchaContainer
+        );
+
+        if (!recaptchaContainer) {
+          this.error = new Error('Invalid recaptcha-container');
+          return;
         }
 
-        /**
-         * Create user with email and password.
-         */
-        createUserWithEmailAndPassword() {
-          firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPassword)
-          .then(user => {
-            this.userEmail = null;
-            this.userPassword = null;
-            return firebase.auth().currentUser.updateProfile({ displayName: this.userName })
+        const appVerifier = new firebase.auth.RecaptchaVerifier(
+          recaptchaContainer,
+          {size: 'invisible'}
+        );
+
+        firebase.auth().signInWithPhoneNumber(this.phoneNumber, appVerifier)
+          .then((confirmationResult, ...rest) => {
+            /**
+             * SMS sent. Prompt user to type the code 
+             * from the message, then sign the user in 
+             * with confirmationResult.confirm(code).
+             */
+            this.confirmationResult = confirmationResult;
+            this.showConfirmationCodeScreen();
           })
-          .catch(error => {
-            this.error = error;
-            this.userPassword = null;
-          });
-        }
-
-        /**
-         * Sign In with phone number.
-         */
-        signInWithPhone() {
-          const recaptchaContainer = document.getElementById(this.recaptchaContainer);
-
-          if (!recaptchaContainer) {
-            this.error = new Error('Invalid recaptcha-container')
-            return
-          }
-
-          const appVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainer, { size: 'invisible' });
-
-          firebase.auth().signInWithPhoneNumber(this.phoneNumber, appVerifier)
-            .then((confirmationResult, ...rest) => {
-              // SMS sent. Prompt user to type the code from the message, then sign the
-              // user in with confirmationResult.confirm(code).
-              this.confirmationResult = confirmationResult;
-              this.showConfirmationCodeScreen()
-            })
-            .catch(error => {
-              this.error = error;
-            });
-        }
-
-        /**
-         * Confirmation code screen.
-         */
-        showConfirmationCodeScreen () {
-          this.openView = 'confirm-code';
-        }
-
-        /**
-         * Sign in the user by passing the code to the confirm method.
-         */
-        confirmCode() {
-          this.confirmationResult.confirm(this.confirmationCode)
-            .then((result) => {
-              this.user = result.user
-            })
-            .catch(error => {
-              this.error = error;
-            });
-        }
-
-        /**
-         * sign out
-         */
-        signOut() {
-          this.error = null;
-          firebase.auth().signOut().catch(error => {
+          .catch((error) => {
             this.error = error;
           });
-        }
+      }
 
-      };
+      /**
+       * Confirmation code screen.
+       */
+      showConfirmationCodeScreen() {
+        this.openView = 'confirm-code';
+      }
+
+      /**
+       * Sign in the user by passing the code to the confirm method.
+       */
+      confirmCode() {
+        this.confirmationResult.confirm(this.confirmationCode)
+          .then((result) => {
+            this.user = result.user;
+          })
+          .catch((error) => {
+            this.error = error;
+          });
+      }
+
+      /**
+       * sign out
+       */
+      signOut() {
+        this.error = null;
+        firebase.auth().signOut().catch((error) => {
+          this.error = error;
+        });
+      }
     };
-
-    window.Fabric = window.Fabric || {};
-    Fabric.AuthMixin = AuthMixin;
-  })();
+  };
 </script>
