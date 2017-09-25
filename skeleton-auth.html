@@ -378,6 +378,7 @@
      * @customElement
      * @polymer
      * @constructor
+     * @appliesMixin Fabric.AuthMixin
      * @extends Polymer.Element
      * @property {boolean} google
      * @demo demo/index.html
@@ -408,64 +409,6 @@
           openView: {
             type: String,
             value: 'options',
-          },
-
-          /**
-           * Allow Google Sign-in.
-           */
-          google: {
-            type: Boolean,
-            notify: true,
-            value: false,
-          },
-
-          /**
-           * Allow Facebook Sign-in.
-           */
-          facebook: {
-            type: Boolean,
-            notify: true,
-            value: false,
-          },
-
-          /**
-           * Allow Twitter Sign-in.
-           */
-          twitter: {
-            type: Boolean,
-            notify: true,
-            value: false,
-          },
-
-          /**
-           * Allow GitHub Sign-in.
-           */
-          github: {
-            type: Boolean,
-            notify: true,
-            value: false,
-          },
-
-          /**
-           * Allow anonymous Sign-in.
-           */
-          anonymous: {
-            type: Boolean,
-            notify: true,
-            value: false,
-          },
-
-          /*
-           * Allow Email Sign-in.
-           */
-          email: {
-            type: Boolean,
-            value: false,
-          },
-
-          phone: {
-            type: Boolean,
-            value: false,
           },
 
           /*

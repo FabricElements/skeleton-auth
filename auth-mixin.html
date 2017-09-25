@@ -6,7 +6,7 @@
   /**
    * Fabric.AuthMixin
    *
-   * @polymerMixin
+   * @polymerMixin Fabric.AuthMixin
    * @memberOf Fabric
    * @constructor
    * @summary Custom element base class that provides the core API for
@@ -259,7 +259,7 @@
         );
 
         firebase.auth().signInWithPhoneNumber(this.phoneNumber, appVerifier)
-          .then((confirmationResult, ...rest) => {
+          .then((confirmationResult) => {
             /**
              * SMS sent. Prompt user to type the code 
              * from the message, then sign the user in 
