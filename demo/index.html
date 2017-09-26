@@ -80,7 +80,6 @@
   </custom-style>
 </head>
 <body>
-<span id="recaptcha"></span>
 <div class="container">
   <h3 class="paper-font-display1">Basic skeleton-auth demo</h3>
 
@@ -103,7 +102,7 @@
 
       <dom-if if="[[!signedIn]]">
         <template>
-          <skeleton-auth google facebook twitter github anonymous email phone on-error="handleError" recaptcha-container="recaptcha">
+          <skeleton-auth google facebook twitter github anonymous email phone on-error="handleError">
           </skeleton-auth>
         </template>
       </dom-if>

@@ -244,9 +244,12 @@
        * Sign In with phone number.
        */
       signInWithPhone() {
-        const recaptchaContainer = document.getElementById(
-          this.recaptchaContainer
-        );
+        const recaptchaContainer = document.createElement('div');
+        document.body.appendChild(recaptchaContainer);
+
+        const cleanUp = () => {
+          recaptchaContainer.parentElement.removeChild(recaptchaContainer);
+        };
 
         if (!recaptchaContainer) {
           this.error = new Error('Invalid recaptcha-container');
@@ -267,9 +270,11 @@
              */
             this.confirmationResult = confirmationResult;
             this.showConfirmationCodeScreen();
+            cleanUp();
           })
           .catch((error) => {
             this.error = error;
+            cleanUp();
           });
       }
 
