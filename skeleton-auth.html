@@ -218,8 +218,15 @@
       <template is="dom-if" if="[[email]]">
         <div id="email-login-box" class="screen">
           <form is="iron-form" id="email-login-form">
-            <paper-input value="{{userEmail}}" required auto-validate error-message="[[errorMessageEmail]]"
-                        label="[[labelEmail]]" type="text" class="m-b-1">
+            <paper-input 
+              value="{{userEmail}}" 
+              id="login-input-mail" 
+              required 
+              auto-validate 
+              error-message="[[errorMessageEmail]]"
+              label="[[labelEmail]]" 
+              type="text" 
+              class="m-b-1">
             </paper-input>
 
             <paper-button class="email" on-tap="fetchEmailProviders">
@@ -274,7 +281,13 @@
                 type="text"
                 class="m-b-1"
               ></paper-input>
-              <paper-input value="{{userPassword}}" label="[[labelPassSignIn]]" type="password" class="m-b-1"></paper-input>
+              <paper-input 
+                value="{{userPassword}}"
+                id="login-input-pass"
+                label="[[labelPassSignIn]]"
+                type="password"
+                class="m-b-1"
+              ></paper-input>
 
               <a href on-click="_forgotPass">Forgot Your Password?</a>
 
@@ -423,6 +436,7 @@
           availableProviders: {
             type: Array,
             value: [],
+            notify: true,
           },
 
           /*

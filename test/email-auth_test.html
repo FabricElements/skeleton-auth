@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>skeleton-auth test</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../polymerfire/polymerfire.html">
+  <link rel="import" href="../skeleton-auth.html">
+</head>
+<body>
+
+<test-fixture id="EmailAuth">
+  <template>
+    <div>
+      <firebase-app
+        auth-domain="fabricelements.firebaseapp.com"
+        database-url="https://fabricelements.firebaseio.com"
+        api-key="AIzaSyCJRNdR0eodnswyi8MHCtF1YOjY235mhM8"
+        storage-bucket="fabricelements.appspot.com"
+      ></firebase-app>
+  
+      <firebase-auth    
+        signed-in="{{signedIn}}">
+      </firebase-auth>
+  
+      <dom-if if="[[!signedIn]]">
+        <template>
+          <skeleton-auth email>
+          </skeleton-auth>
+        </template>
+      </dom-if>
+    </div>
+  </template>
+</test-fixture>
+
+<test-fixture id="AnonymousAuth">
+    <template>
+      <div>
+        <firebase-app
+          auth-domain="fabricelements.firebaseapp.com"
+          database-url="https://fabricelements.firebaseio.com"
+          api-key="AIzaSyCJRNdR0eodnswyi8MHCtF1YOjY235mhM8"
+          storage-bucket="fabricelements.appspot.com"
+        ></firebase-app>
+    
+        <firebase-auth    
+          signed-in="{{signedIn}}">
+        </firebase-auth>
+    
+        <dom-if if="[[!signedIn]]">
+          <template>
+            <skeleton-auth anonymous>
+            </skeleton-auth>
+          </template>
+        </dom-if>
+      </div>
+    </template>
+  </test-fixture>
+<script>
+  const oncePropChanged = (el, prop) => {
+    return new Promise((resolve, reject) => {
+      const dashedPropName = prop
+        .replace(/[A-Z]/g, (match) => `-${match[0].toLowerCase()}`)
+        .concat('-changed');
+
+      el.addEventListener(dashedPropName, listener);
+
+      /**
+       * listener
+       * @param {Object} event
+       */
+      function listener(event) {
+        el.removeEventListener(dashedPropName, listener);
+        resolve(event);
+      }
+    });
+  };
+  suite('Sign In with email/password provider', () => {
+    test('Sign in with email/password auth method', (done) => {
+      const testEmail = 'fabricelements@mailinator.com';
+      const testPass = 'fabricelements';
+      const element = fixture('EmailAuth');
+
+      flush(() => {
+        const firebaseAuth = element.querySelector('firebase-auth');
+        const skeletonAuth = element.querySelector('skeleton-auth');
+        const emailButton = skeletonAuth.shadowRoot.querySelector('.email');
+
+        // Expect client isn't authenticated
+        expect(firebaseAuth.signedIn).to.equal(false);
+
+        // Select the email/password auth method
+        MockInteractions.tap(emailButton);
+
+        // Set default value on the email input
+        const emailInput = skeletonAuth
+          .shadowRoot
+          .querySelector('#login-input-mail');
+        emailInput.value = testEmail;
+
+        // Select the sign in email button
+        const emailSignin = skeletonAuth
+          .shadowRoot
+          .querySelector('#email-login-box .email');
+
+        // Click to sign in
+        MockInteractions.tap(emailSignin);
+
+        // Wait for Firebase API response
+        oncePropChanged(skeletonAuth, 'availableProviders').then(() => {
+          console.log(firebaseAuth.signedIn);
+          // Set default value on the password input
+          const passInput = skeletonAuth
+            .shadowRoot
+            .querySelector('#login-input-pass');
+          passInput.value = testPass;
+
+          // Select the sign in password button
+          const passSignin = skeletonAuth
+            .shadowRoot
+            .querySelector('#email-providers-box .email');
+
+          // Click to sign in
+          MockInteractions.tap(passSignin);
+
+          // Wait for Firebase API response
+          return oncePropChanged(
+            firebaseAuth,
+            'signedIn'
+          );
+        })
+        .then(() => {
+          expect(firebaseAuth.signedIn).to.equal(true);
+
+          expect(
+            firebaseAuth.user.email
+          ).to.equal(
+            testEmail
+          );
+
+          expect(firebaseAuth.user.uid).to.be.ok;
+
+          expect(firebaseAuth.signedIn).to.equal(true);
+
+          done();
+        })
+        .catch(done);
+      });
+    });
+  });
+</script>
+</body>
+</html>

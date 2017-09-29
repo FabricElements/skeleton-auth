@@ -50,12 +50,13 @@
     ]
   },
   "globals": {
-    "Polymer": true,
-    "fixture": true,
-    "MockInteractions": true,
-    "WCT": true,
+    "assert": true,
     "Fabric": true,
     "firebase": true,
-    "assert": true
+    "fixture": true,
+    "flush": true,
+    "MockInteractions": true,
+    "Polymer": true,
+    "WCT": true
   }
 }

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>skeleton-auth test</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../polymerfire/polymerfire.html">
+  <link rel="import" href="../skeleton-auth.html">
+</head>
+<body>
+
+<test-fixture id="AnonymousAuth">
+    <template>
+      <div>
+        <firebase-app
+          auth-domain="fabricelements.firebaseapp.com"
+          database-url="https://fabricelements.firebaseio.com"
+          api-key="AIzaSyCJRNdR0eodnswyi8MHCtF1YOjY235mhM8"
+          storage-bucket="fabricelements.appspot.com"
+        ></firebase-app>
+    
+        <firebase-auth    
+          signed-in="{{signedIn}}">
+        </firebase-auth>
+    
+        <dom-if if="[[!signedIn]]">
+          <template>
+            <skeleton-auth anonymous>
+            </skeleton-auth>
+          </template>
+        </dom-if>
+      </div>
+    </template>
+  </test-fixture>
+<script>
+  const oncePropChanged = (el, prop) => {
+    return new Promise((resolve, reject) => {
+      const dashedPropName = prop
+        .replace(/[A-Z]/g, (match) => `-${match[0].toLowerCase()}`)
+        .concat('-changed');
+
+      el.addEventListener(dashedPropName, listener);
+
+      /**
+       * listener
+       * @param {Object} event
+       */
+      function listener(event) {
+        el.removeEventListener(dashedPropName, listener);
+        resolve(event);
+      }
+    });
+  };
+
+  suite('Sign In with anonymous provider', () => {
+    test('Sign in anonymously', (done) => {
+      const element = fixture('AnonymousAuth');
+      flush(() => {
+        const firebaseAuth = element.querySelector('firebase-auth');
+        const skeletonAuth = element.querySelector('skeleton-auth');
+        const anonymousButton = skeletonAuth
+          .shadowRoot
+          .querySelector('.anonymous');
+
+        // Expect client isn't authenticated
+        expect(firebaseAuth.signedIn).to.equal(false);
+
+        // Watch to changes on the auth status
+        oncePropChanged(firebaseAuth, 'statusKnown').then(() => {
+          expect(firebaseAuth.user.uid).to.be.ok;
+
+          expect(firebaseAuth.signedIn).to.equal(true);
+          done();
+        })
+        .catch(done);
+
+        // Select the email/password auth method
+        MockInteractions.tap(anonymousButton);
+      });
+    });
+  });
+</script>
+</body>
+</html>
