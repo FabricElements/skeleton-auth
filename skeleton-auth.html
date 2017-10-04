@@ -3,6 +3,7 @@
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-styles/classes/typography.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="./auth-mixin.html">
 <link rel="import" href="./icons.html">
 
@@ -173,21 +174,23 @@
       -->
       <template is="dom-if" if="[[phone]]">
         <div id="phone-login-box" class="screen">
-          <form is="iron-form" id="phone-login-form">
-            <paper-input value="{{phoneNumber}}"
-                          label="Phone number"
-                          type="text"
-                          class="m-b-1"
-            ></paper-input>
-            <paper-button id="sign-in-button" class="email" on-tap="signInWithPhone">
-              <span>
-                Verify
-              </span>
-            </paper-button>
-            <paper-button class="email" on-tap="_closeDialog">
-              <span>Cancel</span>
-            </paper-button>
-          </form>
+          <iron-form id="phone-login-form">
+            <form>
+              <paper-input value="{{phoneNumber}}"
+                            label="Phone number"
+                            type="text"
+                            class="m-b-1"
+              ></paper-input>
+              <paper-button id="sign-in-button" class="email" on-tap="signInWithPhone">
+                <span>
+                  Verify
+                </span>
+              </paper-button>
+              <paper-button class="email" on-tap="_closeDialog">
+                <span>Cancel</span>
+              </paper-button>
+            </form>
+          </iron-form>
         </div>
       </template>
 
@@ -196,19 +199,21 @@
       -->
       <template is="dom-if" if="[[phone]]">
         <div id="confirm-code-box" class="screen">
-          <form is="iron-form" id="confirm-code-form">
-            <paper-input value="{{confirmationCode}}"
-                          label="6-digit code"
-                          type="text"
-                          class="m-b-1"
-            ></paper-input>
-            <paper-button class="email" on-tap="confirmCode">
-              <span>Continue</span>
-            </paper-button>
-            <paper-button class="email" on-tap="_closeDialog">
-              <span>Cancel</span>
-            </paper-button>
-          </form>
+          <iron-form id="confirm-code-form">
+            <form>
+              <paper-input value="{{confirmationCode}}"
+                            label="6-digit code"
+                            type="text"
+                            class="m-b-1"
+              ></paper-input>
+              <paper-button class="email" on-tap="confirmCode">
+                <span>Continue</span>
+              </paper-button>
+              <paper-button class="email" on-tap="_closeDialog">
+                <span>Cancel</span>
+              </paper-button>
+            </form>
+          </iron-form>
         </div>
       </template>
 
@@ -217,25 +222,27 @@
       -->
       <template is="dom-if" if="[[email]]">
         <div id="email-login-box" class="screen">
-          <form is="iron-form" id="email-login-form">
-            <paper-input 
-              value="{{userEmail}}" 
-              id="login-input-mail" 
-              required 
-              auto-validate 
-              error-message="[[errorMessageEmail]]"
-              label="[[labelEmail]]" 
-              type="text" 
-              class="m-b-1">
-            </paper-input>
+          <iron-form id="email-login-form">
+            <form>
+              <paper-input 
+                value="{{userEmail}}" 
+                id="login-input-mail" 
+                required 
+                auto-validate 
+                error-message="[[errorMessageEmail]]"
+                label="[[labelEmail]]" 
+                type="email" 
+                class="m-b-1">
+              </paper-input>
 
-            <paper-button class="email" on-tap="fetchEmailProviders">
-              <span>Sign in</span>
-            </paper-button>
-            <paper-button class="email" on-tap="_closeDialog">
-              <span>Cancel</span>
-            </paper-button>
-          </form>
+              <paper-button class="email" on-tap="fetchEmailProviders">
+                <span>Sign in</span>
+              </paper-button>
+              <paper-button class="email" on-tap="_closeDialog">
+                <span>Cancel</span>
+              </paper-button>
+            </form>
+          </iron-form>
         </div>
       </template>
 
@@ -275,26 +282,28 @@
           </nav>
 
           <template is="dom-if" if="[[availableProviders.password]]">
-            <form is="iron-form" id="password-login-box">
-              <paper-input value="{{userEmail}}"
-                disabled="[[disabled]]"
-                type="text"
-                class="m-b-1"
-              ></paper-input>
-              <paper-input 
-                value="{{userPassword}}"
-                id="login-input-pass"
-                label="[[labelPassSignIn]]"
-                type="password"
-                class="m-b-1"
-              ></paper-input>
+            <iron-form id="password-login-box">
+              <form>
+                <paper-input value="{{userEmail}}"
+                  disabled="[[disabled]]"
+                  type="email"
+                  class="m-b-1"
+                ></paper-input>
+                <paper-input 
+                  value="{{userPassword}}"
+                  id="login-input-pass"
+                  label="[[labelPassSignIn]]"
+                  type="password"
+                  class="m-b-1"
+                ></paper-input>
 
-              <a href on-click="_forgotPass">Forgot Your Password?</a>
+                <a href on-click="_forgotPass">Forgot Your Password?</a>
 
-              <paper-button class="email" on-tap="signInWithEmailAndPassword">
-                <span>Sign in</span>
-              </paper-button>
-            </form>
+                <paper-button class="email" on-tap="signInWithEmailAndPassword">
+                  <span>Sign in</span>
+                </paper-button>
+              </form>
+            </iron-form>
           </template>
 
           <paper-button class="email" on-tap="_closeDialog">
@@ -308,24 +317,26 @@
       -->
       <template is="dom-if" if="[[email]]">
         <div id="forgot-pass-box" class="screen">
-          <form is="iron-form" id="forgot-pass-form">
+          <iron-form id="forgot-pass-form">
+            <form>
 
-            <h3>Recover password</h3>
+              <h3>Recover password</h3>
 
-            <p>Get instructions sent to this email that explain how to reset your password</p>
+              <p>Get instructions sent to this email that explain how to reset your password</p>
 
-            <paper-input value="{{userEmail}}"
-                          type="text"
-                          class="m-b-1"
-            ></paper-input>
+              <paper-input value="{{userEmail}}"
+                            type="text"
+                            class="m-b-1"
+              ></paper-input>
 
-            <paper-button class="email" on-tap="passwordReset">
-              <span>Send</span>
-            </paper-button>
-            <paper-button class="email" on-tap="_closeDialog">
-              <span>Cancel</span>
-            </paper-button>
-          </form>
+              <paper-button class="email" on-tap="passwordReset">
+                <span>Send</span>
+              </paper-button>
+              <paper-button class="email" on-tap="_closeDialog">
+                <span>Cancel</span>
+              </paper-button>
+            </form>
+          </iron-form>
         </div>
       </template>
 
@@ -349,34 +360,42 @@
       -->
       <template is="dom-if" if="[[email]]">
         <div id="email-signup-box" class="screen">
-          <form is="iron-form" id="email-signup-form">
-            <paper-input value="{{userEmail}}"
-                          disabled="[[disabled]]"
-                          label="email@example.com"
-                          type="text"
-                          class="m-b-1"
-            ></paper-input>
+          <iron-form id="email-signup-form">
+            <form>
+              <paper-input value="{{userEmail}}"
+                            class="m-b-1"
+                            disabled="[[disabled]]"
+                            type="email">
+              </paper-input>
 
-            <paper-input value="{{userName}}" label="First & last name" type="text" class="m-b-1"></paper-input>
+              <paper-input value="{{userName}}" 
+                            auto-validate 
+                            class="m-b-1"
+                            id="signup-input-name"
+                            label="First & last name"
+                            required
+                            type="text">
+              </paper-input>
 
-            <paper-input value="{{userPassword}}"
-                          label="[[labelPassSignUp]]"
-                          type="password"
-                          minlength="[[minLength]]"
-                          maxlength="[[maxLength]]"
-                          auto-validate
-                          required
-                          class="m-b-1"
-                          error-message="[[errorMessagePass]]">
-            </paper-input>
+              <paper-input value="{{userPassword}}"
+                            auto-validate
+                            id="signup-input-pass"
+                            class="m-b-1"
+                            error-message="[[errorMessagePass]]"
+                            label="[[labelPassSignUp]]"
+                            minlength="[[minLength]]"
+                            required
+                            type="password">
+              </paper-input>
 
-            <paper-button class="email" on-tap="createUserWithEmailAndPassword">
-              <span>Sign Up</span>
-            </paper-button>
-            <paper-button class="email" on-tap="_closeDialog">
-              <span>Cancel</span>
-            </paper-button>
-          </form>
+              <paper-button class="email" on-tap="createUserWithEmailAndPassword">
+                <span>Sign Up</span>
+              </paper-button>
+              <paper-button class="email" on-tap="_closeDialog">
+                <span>Cancel</span>
+              </paper-button>
+            </form>
+          </iron-form>
         </div>
       </template>
     </div>
@@ -469,14 +488,6 @@
           minLength: {
             type: Number,
             value: 6,
-          },
-
-          /*
-           * The maximum length of the input value.
-           */
-          maxLength: {
-            type: Number,
-            value: 12,
           },
 
           /*

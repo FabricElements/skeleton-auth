@@ -300,10 +300,11 @@
 
       /**
        * sign out
+       * @return {Promise}
        */
       signOut() {
         this.error = null;
-        firebase.auth().signOut().catch((error) => {
+        return firebase.auth().signOut().catch((error) => {
           this.error = error;
         });
       }

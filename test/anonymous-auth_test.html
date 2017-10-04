@@ -64,24 +64,41 @@
       flush(() => {
         const firebaseAuth = element.querySelector('firebase-auth');
         const skeletonAuth = element.querySelector('skeleton-auth');
-        const anonymousButton = skeletonAuth
-          .shadowRoot
-          .querySelector('.anonymous');
 
-        // Expect client isn't authenticated
-        expect(firebaseAuth.signedIn).to.equal(false);
+        // Fist sign OUT any already logged-in user, since all tests run in a
+        // single browser session/window and firebase uses localStorage to keep
+        // its state.
+        skeletonAuth.signOut().then(() => {
+          const anonymousButton = skeletonAuth
+            .shadowRoot
+            .querySelector('.anonymous');
 
-        // Watch to changes on the auth status
-        oncePropChanged(firebaseAuth, 'statusKnown').then(() => {
-          expect(firebaseAuth.user.uid).to.be.ok;
+          // Expect client isn't authenticated
+          expect(firebaseAuth.signedIn).to.equal(false);
 
-          expect(firebaseAuth.signedIn).to.equal(true);
-          done();
+          // Watch to changes on the auth status bofore clicking the button
+          oncePropChanged(firebaseAuth, 'signedIn').then(() => {
+            // firebase#signout resolves this promise before setting signedIn
+            // to false. That makes this event listener to trigger before
+            // actually doing the login (when signedIn goes from false -> true).
+            return firebaseAuth.signedIn
+              // If signedIn is true, we can do our asserts right ahead
+              ? Promise.resolve()
+              // If not, we listen again for signedIn to go from false -> true
+              : oncePropChanged(firebaseAuth, 'signedIn');
+          })
+          .then(() => {
+            expect(firebaseAuth.user.uid).to.be.ok;
+
+            expect(firebaseAuth.signedIn).to.equal(true);
+            done();
+          })
+          .catch(done);
+
+          // Select the email/password auth method
+          MockInteractions.tap(anonymousButton);
         })
         .catch(done);
-
-        // Select the email/password auth method
-        MockInteractions.tap(anonymousButton);
       });
     });
   });

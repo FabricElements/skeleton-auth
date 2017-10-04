@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<test-fixture id="EmailAuth">
+<test-fixture id="SignupAuth">
   <template>
     <div>
       <firebase-app
@@ -57,14 +57,12 @@
       }
     });
   };
-  suite('Sign In with email/password provider', () => {
-    test('Sign in with email/password auth method', (done) => {
-      const testEmail = 'fabricelements@mailinator.com';
-      const testPass = 'fabricelements';
-      const element = fixture('EmailAuth');
+  suite('Input validations', () => {
+    test('Should validate sign up form inputs', (done) => {
+      const testEmail = 'test-fabric@mailinator.com';
+      const element = fixture('SignupAuth');
 
       flush(() => {
-        const firebaseAuth = element.querySelector('firebase-auth');
         const skeletonAuth = element.querySelector('skeleton-auth');
 
         // Fist sign OUT any already logged-in user, since all tests run in a
@@ -72,9 +70,6 @@
         // its state.
         skeletonAuth.signOut().then(() => {
           const emailButton = skeletonAuth.shadowRoot.querySelector('.email');
-
-          // Expect client isn't authenticated
-          expect(firebaseAuth.signedIn).to.equal(false);
 
           // Select the email/password auth method
           MockInteractions.tap(emailButton);
@@ -95,39 +90,36 @@
 
           // Wait for Firebase API response
           oncePropChanged(skeletonAuth, 'availableProviders').then(() => {
-            // Set default value on the password input
+            const nameInput = skeletonAuth
+              .shadowRoot
+              .querySelector('#signup-input-name');
+
+            // Select the password input
             const passInput = skeletonAuth
               .shadowRoot
-              .querySelector('#login-input-pass');
-            passInput.value = testPass;
+              .querySelector('#signup-input-pass');
 
-            // Select the sign in password button
-            const passSignin = skeletonAuth
+            // Select the Sign Up form
+            const signupForm = skeletonAuth
               .shadowRoot
-              .querySelector('#email-providers-box .email');
+              .querySelector('#email-signup-form');
 
-            // Click to sign in
-            MockInteractions.tap(passSignin);
+            expect(signupForm.validate()).to.be.false;
 
-            // Wait for Firebase API response
-            return oncePropChanged(
-              firebaseAuth,
-              'signedIn'
-            );
-          })
-          .then(() => {
-            expect(firebaseAuth.signedIn).to.equal(true);
+            nameInput.value = 'Fabric Elements';
+            passInput.value = '';
 
-            expect(
-              firebaseAuth.user.email
-            ).to.equal(
-              testEmail
-            );
+            expect(signupForm.validate()).to.be.false;
 
-            expect(firebaseAuth.user.uid).to.be.ok;
+            nameInput.value = '';
+            passInput.value = 'fabricelements';
 
-            expect(firebaseAuth.signedIn).to.equal(true);
+            expect(signupForm.validate()).to.be.false;
 
+            nameInput.value = 'Fabric Elements';
+            passInput.value = 'fabricelements';
+
+            expect(signupForm.validate()).to.be.true;
             done();
           })
           .catch(done);
