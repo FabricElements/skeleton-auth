@@ -45,12 +45,8 @@ Configure your Firebase app
 Then add the `skeleton-auth` element with the selected providers.
 
 ```html
-<span id="recaptcha"></span>
-
 <skeleton-auth google facebook twitter github anonymous email phone on-error="handleError" recaptcha-container="recaptcha"></skeleton-auth>
 ```
-
-* `recaptcha-container` - The Google reCAPTCHA doesn't work inside shadow dom, has to be placed it inside a container in the top document so it can be rendered.
 
 * Available providers:
   * Google Sign-In

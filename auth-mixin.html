@@ -1,4 +1,4 @@
-<link rel="import" href="../polymerfire/firebase-auth-script.html">
+<link rel="import" href="../polymerfire/polymerfire.html">
 
 <script>
   window.Fabric = window.Fabric || {};
@@ -94,8 +94,8 @@
       /**
        * Constructor
        */
-      constructor() {
-        super();
+      ready() {
+        super.ready();
         firebase.auth().getRedirectResult().catch((error) => {
           if (error.code === 'auth/account-exists-with-different-credential') {
             this.userEmail = error.email;
@@ -158,12 +158,8 @@
 
       /**
        * Checks if there's any provider for the given email
-       *
-       *  @param {Object} e
        */
-      fetchEmailProviders(e) {
-        if (e) e.preventDefault();
-
+      fetchEmailProviders() {
         firebase
           .auth()
           .fetchProvidersForEmail(this.userEmail)
@@ -177,21 +173,21 @@
             };
 
             if (data.length === 0) {
-              /** 
-               * Show account creation form if the email 
+              /**
+               * Show account creation form if the email
                * is not registered in our database
                */
               this.openView = 'email-signup';
             } else {
-              /** 
-               * If there's any provider option 
-               * for this email, show the options 
+              /**
+               * If there's any provider option
+               * for this email, show the options
                */
               this.openView = 'email-providers';
             }
           }).catch((error) => {
-            this.error = error;
-          });
+          this.error = error;
+        });
       }
 
       /**
@@ -201,10 +197,10 @@
        */
       signInWithEmailAndPassword(e) {
         firebase.auth()
-        .signInWithEmailAndPassword(this.userEmail, this.userPassword)
-        .catch((error) => {
-          this.error = error;
-        });
+          .signInWithEmailAndPassword(this.userEmail, this.userPassword)
+          .catch((error) => {
+            this.error = error;
+          });
         this.userEmail = null;
         this.userPassword = null;
       }
@@ -214,9 +210,9 @@
        */
       passwordReset() {
         firebase.auth().sendPasswordResetEmail(this.userEmail)
-        .then(() => {
-          this.openView = 'email-sent';
-        }).catch((error) => {
+          .then(() => {
+            this.openView = 'email-sent';
+          }).catch((error) => {
           this.error = error;
         });
       }
@@ -226,18 +222,18 @@
        */
       createUserWithEmailAndPassword() {
         firebase.auth()
-        .createUserWithEmailAndPassword(this.userEmail, this.userPassword)
-        .then((user) => {
-          this.userEmail = null;
-          this.userPassword = null;
-          return firebase.auth().currentUser.updateProfile({
-            displayName: this.userName,
+          .createUserWithEmailAndPassword(this.userEmail, this.userPassword)
+          .then((user) => {
+            this.userEmail = null;
+            this.userPassword = null;
+            return firebase.auth().currentUser.updateProfile({
+              displayName: this.userName,
+            });
+          })
+          .catch((error) => {
+            this.error = error;
+            this.userPassword = null;
           });
-        })
-        .catch((error) => {
-          this.error = error;
-          this.userPassword = null;
-        });
       }
 
       /**
@@ -264,8 +260,8 @@
         firebase.auth().signInWithPhoneNumber(this.phoneNumber, appVerifier)
           .then((confirmationResult) => {
             /**
-             * SMS sent. Prompt user to type the code 
-             * from the message, then sign the user in 
+             * SMS sent. Prompt user to type the code
+             * from the message, then sign the user in
              * with confirmationResult.confirm(code).
              */
             this.confirmationResult = confirmationResult;
