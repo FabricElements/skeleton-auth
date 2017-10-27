@@ -20,11 +20,8 @@
     "new-cap": [
       "error",
       {
-        "capIsNewExceptions": [
-          "Polymer",
-          "Polymer.GestureEventListeners",
-          "Fabric.AuthMixin"
-        ]
+        "newIsCap": true,
+        "properties": false
       }
     ],
     "no-var": "error",
@@ -50,13 +47,12 @@
     ]
   },
   "globals": {
-    "assert": true,
-    "Fabric": true,
-    "firebase": true,
-    "fixture": true,
-    "flush": true,
-    "MockInteractions": true,
     "Polymer": true,
-    "WCT": true
+    "fixture": true,
+    "MockInteractions": true,
+    "WCT": true,
+    "firebase": true,
+    "flush": true,
+    "Fabric": true
   }
 }
