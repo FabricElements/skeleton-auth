@@ -175,7 +175,7 @@
       <template is="dom-if" if="[[phone]]">
         <div id="phone-login-box" class="screen">
           <iron-form id="phone-login-form">
-            <form>
+            <form on-submit="signInWithPhone" onkeyup="[[_submitOnEnter]]">
               <paper-input value="{{phoneNumber}}"
                             label="Phone number"
                             type="text"
@@ -200,7 +200,7 @@
       <template is="dom-if" if="[[phone]]">
         <div id="confirm-code-box" class="screen">
           <iron-form id="confirm-code-form">
-            <form>
+            <form on-submit="confirmCode" onkeyup="[[_submitOnEnter]]">
               <paper-input value="{{confirmationCode}}"
                             label="6-digit code"
                             type="text"
@@ -223,14 +223,14 @@
       <template is="dom-if" if="[[email]]">
         <div id="email-login-box" class="screen">
           <iron-form id="email-login-form">
-            <form>
+            <form on-submit="fetchEmailProviders" onkeyup="[[_submitOnEnter]]">
               <paper-input 
                 value="{{userEmail}}" 
                 id="login-input-mail" 
                 required 
                 auto-validate 
                 error-message="[[errorMessageEmail]]"
-                label="[[labelEmail]]" 
+                label="[[labelEmail]]"
                 type="email" 
                 class="m-b-1">
               </paper-input>
@@ -283,7 +283,7 @@
 
           <template is="dom-if" if="[[availableProviders.password]]">
             <iron-form id="password-login-box">
-              <form>
+              <form on-submit="signInWithEmailAndPassword" onkeyup="[[_submitOnEnter]]">
                 <paper-input value="{{userEmail}}"
                   disabled="[[disabled]]"
                   type="email"
@@ -361,7 +361,7 @@
       <template is="dom-if" if="[[email]]">
         <div id="email-signup-box" class="screen">
           <iron-form id="email-signup-form">
-            <form>
+            <form on-submit="createUserWithEmailAndPassword" onkeyup="[[_submitOnEnter]]">
               <paper-input value="{{userEmail}}"
                             class="m-b-1"
                             disabled="[[disabled]]"

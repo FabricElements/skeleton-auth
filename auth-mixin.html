@@ -157,6 +157,28 @@
       }
 
       /**
+       * keydown/keyup/keypress event handler to submit forms on enter
+       * This CANNOT be used as an annotated event listener; use regular
+       * DOM onevent handlers.
+       *
+       * @param {object} event
+       * @private
+       * @see https://www.polymer-project.org/2.0/docs/devguide/events#annotated-listeners
+       * @see https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Event_handlers
+       */
+       _submitOnEnter(event) {
+        // check if 'enter' was pressed
+        if (event.keyCode === 13) {
+          // Inside this event handler, `this` context refers to
+          // event.currentTarget; we cannot use event.currentTarget because
+          // Polymer changes it to point to the current Polymer element.
+          this.dispatchEvent(new Event('submit', {
+            bubbles: true,
+          }));
+        }
+      }
+
+      /**
        * Checks if there's any provider for the given email
        */
       fetchEmailProviders() {
