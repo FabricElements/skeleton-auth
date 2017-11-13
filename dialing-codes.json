@@ -5,11 +5,6 @@
     "phoneCode": "+93"
   },
   {
-    "countryCode": "AX",
-    "countryName": "Aland Islands",
-    "phoneCode": "+358-18"
-  },
-  {
     "countryCode": "AL",
     "countryName": "Albania",
     "phoneCode": "+355"
@@ -33,11 +28,6 @@
     "countryCode": "AO",
     "countryName": "Angola",
     "phoneCode": "+244"
-  },
-  {
-    "countryCode": "AI",
-    "countryName": "Anguilla",
-    "phoneCode": "+1-264"
   },
   {
     "countryCode": "AG",
@@ -70,19 +60,9 @@
     "phoneCode": "+43"
   },
   {
-    "countryCode": "AZ",
-    "countryName": "Azerbaijan",
-    "phoneCode": "+994"
-  },
-  {
     "countryCode": "BS",
     "countryName": "Bahamas",
     "phoneCode": "+1-242"
-  },
-  {
-    "countryCode": "BH",
-    "countryName": "Bahrain",
-    "phoneCode": "+973"
   },
   {
     "countryCode": "BD",
@@ -130,11 +110,6 @@
     "phoneCode": "+591"
   },
   {
-    "countryCode": "BQ",
-    "countryName": "Bonaire, Saint Eustatius and Saba ",
-    "phoneCode": "+599"
-  },
-  {
     "countryCode": "BA",
     "countryName": "Bosnia and Herzegovina",
     "phoneCode": "+387"
@@ -148,11 +123,6 @@
     "countryCode": "BR",
     "countryName": "Brazil",
     "phoneCode": "+55"
-  },
-  {
-    "countryCode": "IO",
-    "countryName": "British Indian Ocean Territory",
-    "phoneCode": "+246"
   },
   {
     "countryCode": "VG",
@@ -173,11 +143,6 @@
     "countryCode": "BF",
     "countryName": "Burkina Faso",
     "phoneCode": "+226"
-  },
-  {
-    "countryCode": "BI",
-    "countryName": "Burundi",
-    "phoneCode": "+257"
   },
   {
     "countryCode": "KH",
@@ -210,29 +175,9 @@
     "phoneCode": "+236"
   },
   {
-    "countryCode": "TD",
-    "countryName": "Chad",
-    "phoneCode": "+235"
-  },
-  {
     "countryCode": "CL",
     "countryName": "Chile",
     "phoneCode": "+56"
-  },
-  {
-    "countryCode": "CN",
-    "countryName": "China",
-    "phoneCode": "+86"
-  },
-  {
-    "countryCode": "CX",
-    "countryName": "Christmas Island",
-    "phoneCode": "+61"
-  },
-  {
-    "countryCode": "CC",
-    "countryName": "Cocos Islands",
-    "phoneCode": "+61"
   },
   {
     "countryCode": "CO",
@@ -258,11 +203,6 @@
     "countryCode": "HR",
     "countryName": "Croatia",
     "phoneCode": "+385"
-  },
-  {
-    "countryCode": "CU",
-    "countryName": "Cuba",
-    "phoneCode": "+53"
   },
   {
     "countryCode": "CW",
@@ -330,16 +270,6 @@
     "phoneCode": "+240"
   },
   {
-    "countryCode": "ER",
-    "countryName": "Eritrea",
-    "phoneCode": "+291"
-  },
-  {
-    "countryCode": "EE",
-    "countryName": "Estonia",
-    "phoneCode": "+372"
-  },
-  {
     "countryCode": "ET",
     "countryName": "Ethiopia",
     "phoneCode": "+251"
@@ -373,11 +303,6 @@
     "countryCode": "GF",
     "countryName": "French Guiana",
     "phoneCode": "+594"
-  },
-  {
-    "countryCode": "PF",
-    "countryName": "French Polynesia",
-    "phoneCode": "+689"
   },
   {
     "countryCode": "GA",
@@ -430,11 +355,6 @@
     "phoneCode": "+590"
   },
   {
-    "countryCode": "GU",
-    "countryName": "Guam",
-    "phoneCode": "+1-671"
-  },
-  {
     "countryCode": "GT",
     "countryName": "Guatemala",
     "phoneCode": "+502"
@@ -445,16 +365,6 @@
     "phoneCode": "+44-1481"
   },
   {
-    "countryCode": "GN",
-    "countryName": "Guinea",
-    "phoneCode": "+224"
-  },
-  {
-    "countryCode": "GW",
-    "countryName": "Guinea-Bissau",
-    "phoneCode": "+245"
-  },
-  {
     "countryCode": "GY",
     "countryName": "Guyana",
     "phoneCode": "+592"
@@ -463,11 +373,6 @@
     "countryCode": "HT",
     "countryName": "Haiti",
     "phoneCode": "+509"
-  },
-  {
-    "countryCode": "HM",
-    "countryName": "Heard Island and McDonald Islands",
-    "phoneCode": "+ "
   },
   {
     "countryCode": "HN",
@@ -485,11 +390,6 @@
     "phoneCode": "+36"
   },
   {
-    "countryCode": "IS",
-    "countryName": "Iceland",
-    "phoneCode": "+354"
-  },
-  {
     "countryCode": "IN",
     "countryName": "India",
     "phoneCode": "+91"
@@ -498,11 +398,6 @@
     "countryCode": "ID",
     "countryName": "Indonesia",
     "phoneCode": "+62"
-  },
-  {
-    "countryCode": "IR",
-    "countryName": "Iran",
-    "phoneCode": "+98"
   },
   {
     "countryCode": "IQ",
@@ -565,11 +460,6 @@
     "phoneCode": "+254"
   },
   {
-    "countryCode": "KI",
-    "countryName": "Kiribati",
-    "phoneCode": "+686"
-  },
-  {
     "countryCode": "KW",
     "countryName": "Kuwait",
     "phoneCode": "+965"
@@ -598,11 +488,6 @@
     "countryCode": "LS",
     "countryName": "Lesotho",
     "phoneCode": "+266"
-  },
-  {
-    "countryCode": "LR",
-    "countryName": "Liberia",
-    "phoneCode": "+231"
   },
   {
     "countryCode": "LY",
@@ -650,34 +535,9 @@
     "phoneCode": "+60"
   },
   {
-    "countryCode": "MV",
-    "countryName": "Maldives",
-    "phoneCode": "+960"
-  },
-  {
-    "countryCode": "ML",
-    "countryName": "Mali",
-    "phoneCode": "+223"
-  },
-  {
     "countryCode": "MT",
     "countryName": "Malta",
     "phoneCode": "+356"
-  },
-  {
-    "countryCode": "MH",
-    "countryName": "Marshall Islands",
-    "phoneCode": "+692"
-  },
-  {
-    "countryCode": "MQ",
-    "countryName": "Martinique",
-    "phoneCode": "+596"
-  },
-  {
-    "countryCode": "MR",
-    "countryName": "Mauritania",
-    "phoneCode": "+222"
   },
   {
     "countryCode": "MU",
@@ -703,11 +563,6 @@
     "countryCode": "MD",
     "countryName": "Moldova",
     "phoneCode": "+373"
-  },
-  {
-    "countryCode": "MC",
-    "countryName": "Monaco",
-    "phoneCode": "+377"
   },
   {
     "countryCode": "MN",
@@ -745,11 +600,6 @@
     "phoneCode": "+264"
   },
   {
-    "countryCode": "NR",
-    "countryName": "Nauru",
-    "phoneCode": "+674"
-  },
-  {
     "countryCode": "NP",
     "countryName": "Nepal",
     "phoneCode": "+977"
@@ -785,24 +635,9 @@
     "phoneCode": "+234"
   },
   {
-    "countryCode": "NU",
-    "countryName": "Niue",
-    "phoneCode": "+683"
-  },
-  {
     "countryCode": "NF",
     "countryName": "Norfolk Island",
     "phoneCode": "+672"
-  },
-  {
-    "countryCode": "KP",
-    "countryName": "North Korea",
-    "phoneCode": "+850"
-  },
-  {
-    "countryCode": "MP",
-    "countryName": "Northern Mariana Islands",
-    "phoneCode": "+1-670"
   },
   {
     "countryCode": "NO",
@@ -818,11 +653,6 @@
     "countryCode": "PK",
     "countryName": "Pakistan",
     "phoneCode": "+92"
-  },
-  {
-    "countryCode": "PW",
-    "countryName": "Palau",
-    "phoneCode": "+680"
   },
   {
     "countryCode": "PS",
@@ -853,11 +683,6 @@
     "countryCode": "PH",
     "countryName": "Philippines",
     "phoneCode": "+63"
-  },
-  {
-    "countryCode": "PN",
-    "countryName": "Pitcairn",
-    "phoneCode": "+870"
   },
   {
     "countryCode": "PL",
@@ -905,11 +730,6 @@
     "phoneCode": "+250"
   },
   {
-    "countryCode": "BL",
-    "countryName": "Saint Barthelemy",
-    "phoneCode": "+590"
-  },
-  {
     "countryCode": "SH",
     "countryName": "Saint Helena",
     "phoneCode": "+290"
@@ -943,11 +763,6 @@
     "countryCode": "WS",
     "countryName": "Samoa",
     "phoneCode": "+685"
-  },
-  {
-    "countryCode": "SM",
-    "countryName": "San Marino",
-    "phoneCode": "+378"
   },
   {
     "countryCode": "ST",
@@ -985,11 +800,6 @@
     "phoneCode": "+65"
   },
   {
-    "countryCode": "SX",
-    "countryName": "Sint Maarten",
-    "phoneCode": "+599"
-  },
-  {
     "countryCode": "SK",
     "countryName": "Slovakia",
     "phoneCode": "+421"
@@ -1000,16 +810,6 @@
     "phoneCode": "+386"
   },
   {
-    "countryCode": "SB",
-    "countryName": "Solomon Islands",
-    "phoneCode": "+677"
-  },
-  {
-    "countryCode": "SO",
-    "countryName": "Somalia",
-    "phoneCode": "+252"
-  },
-  {
     "countryCode": "ZA",
     "countryName": "South Africa",
     "phoneCode": "+27"
@@ -1018,11 +818,6 @@
     "countryCode": "KR",
     "countryName": "South Korea",
     "phoneCode": "+82"
-  },
-  {
-    "countryCode": "SS",
-    "countryName": "South Sudan",
-    "phoneCode": "+211"
   },
   {
     "countryCode": "ES",
@@ -1043,11 +838,6 @@
     "countryCode": "SR",
     "countryName": "Suriname",
     "phoneCode": "+597"
-  },
-  {
-    "countryCode": "SJ",
-    "countryName": "Svalbard and Jan Mayen",
-    "phoneCode": "+47"
   },
   {
     "countryCode": "SZ",
@@ -1075,11 +865,6 @@
     "phoneCode": "+886"
   },
   {
-    "countryCode": "TJ",
-    "countryName": "Tajikistan",
-    "phoneCode": "+992"
-  },
-  {
     "countryCode": "TZ",
     "countryName": "Tanzania",
     "phoneCode": "+255"
@@ -1095,11 +880,6 @@
     "phoneCode": "+228"
   },
   {
-    "countryCode": "TK",
-    "countryName": "Tokelau",
-    "phoneCode": "+690"
-  },
-  {
     "countryCode": "TO",
     "countryName": "Tonga",
     "phoneCode": "+676"
@@ -1108,11 +888,6 @@
     "countryCode": "TT",
     "countryName": "Trinidad and Tobago",
     "phoneCode": "+1-868"
-  },
-  {
-    "countryCode": "TN",
-    "countryName": "Tunisia",
-    "phoneCode": "+216"
   },
   {
     "countryCode": "TR",
@@ -1128,11 +903,6 @@
     "countryCode": "TC",
     "countryName": "Turks and Caicos Islands",
     "phoneCode": "+1-649"
-  },
-  {
-    "countryCode": "TV",
-    "countryName": "Tuvalu",
-    "phoneCode": "+688"
   },
   {
     "countryCode": "VI",
@@ -1165,11 +935,6 @@
     "phoneCode": "+1"
   },
   {
-    "countryCode": "UM",
-    "countryName": "United States Minor Outlying Islands",
-    "phoneCode": "+1"
-  },
-  {
     "countryCode": "UY",
     "countryName": "Uruguay",
     "phoneCode": "+598"
@@ -1180,16 +945,6 @@
     "phoneCode": "+998"
   },
   {
-    "countryCode": "VU",
-    "countryName": "Vanuatu",
-    "phoneCode": "+678"
-  },
-  {
-    "countryCode": "VA",
-    "countryName": "Vatican",
-    "phoneCode": "+379"
-  },
-  {
     "countryCode": "VE",
     "countryName": "Venezuela",
     "phoneCode": "+58"
@@ -1198,16 +953,6 @@
     "countryCode": "VN",
     "countryName": "Vietnam",
     "phoneCode": "+84"
-  },
-  {
-    "countryCode": "WF",
-    "countryName": "Wallis and Futuna",
-    "phoneCode": "+681"
-  },
-  {
-    "countryCode": "EH",
-    "countryName": "Western Sahara",
-    "phoneCode": "+212"
   },
   {
     "countryCode": "YE",
