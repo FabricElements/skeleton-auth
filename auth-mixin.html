@@ -279,7 +279,9 @@
           {size: 'invisible'}
         );
 
-        firebase.auth().signInWithPhoneNumber(this.phoneNumber, appVerifier)
+        const phoneComplete = this.phoneCode + this.phoneNumber;
+
+        firebase.auth().signInWithPhoneNumber(phoneComplete, appVerifier)
           .then((confirmationResult) => {
             /**
              * SMS sent. Prompt user to type the code

@@ -1,6 +1,11 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-styles/classes/typography.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-form/iron-form.html">
@@ -176,6 +181,24 @@
         <div id="phone-login-box" class="screen">
           <iron-form id="phone-login-form">
             <form on-submit="signInWithPhone" onkeyup="[[_submitOnEnter]]">
+
+              <iron-ajax
+                auto
+                url="../dialing-codes.json"
+                handle-as="json"
+                last-response={{dataCodes}}
+              ></iron-ajax>
+
+              <paper-dropdown-menu value="{{phoneCode}}" label="Dialing Codes">
+                <paper-listbox attr-for-selected="label" slot="dropdown-content" class="dropdown-content">
+                    <template is="dom-repeat" items="{{dataCodes}}">
+                        <paper-item label$="[[item.phoneCode]]">
+                          [[item.countryName]] [[item.phoneCode]]
+                        </paper-item>
+                    </template>
+                </paper-listbox>
+              </paper-dropdown-menu>
+
               <paper-input value="{{phoneNumber}}"
                             label="Phone number"
                             type="text"
@@ -525,6 +548,11 @@
           },
 
           phoneNumber: {
+            type: String,
+            value: null,
+          },
+
+          phoneCode: {
             type: String,
             value: null,
           },
