@@ -82,6 +82,17 @@
         text-transform: none;
       }
 
+      paper-dropdown-menu {
+        margin-right: 20px;
+        max-width: 90px;
+        text-align: center;
+      }
+
+      .phone-number {
+        display: flex;
+        justify-content: center;
+      }
+
       #email-login {
         text-align: left;
         margin-bottom: 4rem;
@@ -188,22 +199,23 @@
                 handle-as="json"
                 last-response={{dataCodes}}
               ></iron-ajax>
+              <div class="phone-number">
+                <paper-dropdown-menu value="{{phoneCode}}">
+                  <paper-listbox slot="dropdown-content" class="dropdown-content" selected="186">
+                      <template is="dom-repeat" items="{{dataCodes}}">
+                          <paper-item label$="[[item.phoneCode]]">
+                            [[item.countryName]] [[item.phoneCode]]
+                          </paper-item>
+                      </template>
+                  </paper-listbox>
+                </paper-dropdown-menu>
 
-              <paper-dropdown-menu value="{{phoneCode}}" label="Dialing Codes">
-                <paper-listbox attr-for-selected="label" slot="dropdown-content" class="dropdown-content">
-                    <template is="dom-repeat" items="{{dataCodes}}">
-                        <paper-item label$="[[item.phoneCode]]">
-                          [[item.countryName]] [[item.phoneCode]]
-                        </paper-item>
-                    </template>
-                </paper-listbox>
-              </paper-dropdown-menu>
-
-              <paper-input value="{{phoneNumber}}"
-                            label="Phone number"
-                            type="text"
-                            class="m-b-1"
-              ></paper-input>
+                <paper-input value="{{phoneNumber}}"
+                              label="Phone number"
+                              type="text"
+                              class="m-b-1"
+                ></paper-input>
+              </div>
               <paper-button id="sign-in-button" class="email" on-tap="signInWithPhone">
                 <span>
                   Verify
