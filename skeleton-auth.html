@@ -1,9 +1,9 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../neon-animation/web-animations.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-styles/classes/typography.html">
@@ -11,17 +11,25 @@
 <link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="./auth-mixin.html">
 <link rel="import" href="./icons.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="skeleton-auth">
   <template strip-whitespace>
+    <!--suppress CssInvalidPseudoSelector -->
+    <!--suppress CssUnresolvedCustomProperty -->
+    <!--suppress CssUnresolvedCustomPropertySet -->
     <style is="custom-style">
       :host {
         display: block;
-        overflow-y: auto;
-        margin: 0 1rem;
+        box-sizing: border-box;
         padding: 1rem 0;
         --login-button: {
         };
+      }
+
+      :host * {
+        box-sizing: border-box;
       }
 
       a {
@@ -86,11 +94,16 @@
         margin-right: 20px;
         max-width: 90px;
         text-align: center;
+        touch-action: none;
       }
 
       .phone-number {
-        display: flex;
-        justify-content: center;
+        width: 100%;
+        @apply --layout-inline;
+      }
+
+      #phone-input {
+        @apply --layout-flex-auto;
       }
 
       #email-login {
@@ -107,34 +120,65 @@
         margin-bottom: 1rem;
       }
 
-      #auth-container {
-        overflow: hidden;
+      iron-pages,
+      iron-pages > * {
+        position: relative;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 100%;
+        display: block;
+        animation-fill-mode: both;
+        animation-name: fadeOut;
+        animation-duration: 2s;
+        @apply --layout-flex-auto;
+        @apply --layout-vertical;
       }
 
-      .screen {
-        overflow: hidden;
-        max-height: 0;
-        opacity: 0;
-        transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: max-height, opacity;
+      iron-pages > :not([selected]) > * {
+        display: none;
       }
 
-      .options-open #options-box,
-      .email-login-open #email-login-box,
-      .email-providers-open #email-providers-box,
-      .email-signup-open #email-signup-box,
-      .forgot-pass-open #forgot-pass-box,
-      .email-sent-open #email-sent-box,
-      .phone-login-open #phone-login-box,
-      .confirm-code-open #confirm-code-box {
-        max-height: 1000px;
-        opacity: 1;
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
       }
 
+      .fadeIn,
+      iron-pages > [selected],
+      :not([hidden]) {
+        animation-name: fadeIn;
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+
+        to {
+          opacity: 0;
+        }
+      }
+
+      .fadeOut,
+      [hidden] {
+        animation-name: fadeOut;
+      }
     </style>
 
-    <div id="auth-container" class$="[[openView]]-open">
-      <nav id="options-box" class="screen">
+    <iron-pages id="pages"
+                selected="{{selected}}"
+                attr-for-selected="name"
+                selected-attribute="selected"
+                fallback-selection="options"
+                role="navigation">
+      <nav name="options">
         <template is="dom-if" if="[[google]]">
           <paper-button class="google" on-tap="signInGoogle">
             <iron-icon icon="auth:google"></iron-icon>
@@ -189,40 +233,36 @@
         Phone Login screen
       -->
       <template is="dom-if" if="[[phone]]">
-        <div id="phone-login-box" class="screen">
+        <div name="phone-login">
           <iron-form id="phone-login-form">
-            <form on-submit="signInWithPhone" onkeyup="[[_submitOnEnter]]">
-
-              <iron-ajax
-                auto
-                url="../dialing-codes.json"
-                handle-as="json"
-                last-response={{dataCodes}}
-              ></iron-ajax>
+            <form on-submit="signInWithPhone" on-keyup="_submitOnEnter">
               <div class="phone-number">
-                <paper-dropdown-menu value="{{phoneCode}}">
+                <paper-dropdown-menu value="{{phoneCode}}" dynamic-align>
                   <paper-listbox slot="dropdown-content" class="dropdown-content" selected="186">
-                      <template is="dom-repeat" items="{{dataCodes}}">
-                          <paper-item label$="[[item.phoneCode]]">
-                            [[item.countryName]] [[item.phoneCode]]
-                          </paper-item>
-                      </template>
+                    <template is="dom-repeat" items="{{dialingCodes}}">
+                      <paper-item label$="[[item.phoneCode]]">
+                        [[item.countryName]] [[item.phoneCode]]
+                      </paper-item>
+                    </template>
                   </paper-listbox>
                 </paper-dropdown-menu>
 
                 <paper-input value="{{phoneNumber}}"
-                              label="Phone number"
-                              type="text"
-                              class="m-b-1"
+                             label="Phone number"
+                             type="text"
+                             id="phone-input"
+                             prevent-invalid-input
+                             type="number"
+                             allowed-pattern="[\d]"
                 ></paper-input>
               </div>
               <paper-button id="sign-in-button" class="email" on-tap="signInWithPhone">
                 <span>
-                  Verify
+                  VERIFY
                 </span>
               </paper-button>
               <paper-button class="email" on-tap="_closeDialog">
-                <span>Cancel</span>
+                <span>CANCEL</span>
               </paper-button>
             </form>
           </iron-form>
@@ -233,19 +273,19 @@
         Phone code verification screen
       -->
       <template is="dom-if" if="[[phone]]">
-        <div id="confirm-code-box" class="screen">
+        <div name="confirm-code">
           <iron-form id="confirm-code-form">
-            <form on-submit="confirmCode" onkeyup="[[_submitOnEnter]]">
+            <form on-submit="confirmCode" on-keyup="_submitOnEnter">
               <paper-input value="{{confirmationCode}}"
-                            label="6-digit code"
-                            type="text"
-                            class="m-b-1"
+                           label="6-digit code"
+                           type="text"
+                           class="m-b-1"
               ></paper-input>
               <paper-button class="email" on-tap="confirmCode">
                 <span>Continue</span>
               </paper-button>
               <paper-button class="email" on-tap="_closeDialog">
-                <span>Cancel</span>
+                <span>CANCEL</span>
               </paper-button>
             </form>
           </iron-form>
@@ -256,25 +296,25 @@
         Email/Password Login screen
       -->
       <template is="dom-if" if="[[email]]">
-        <div id="email-login-box" class="screen">
+        <div name="email-login">
           <iron-form id="email-login-form">
-            <form on-submit="fetchEmailProviders" onkeyup="[[_submitOnEnter]]">
-              <paper-input 
-                value="{{userEmail}}" 
-                id="login-input-mail" 
-                required 
-                auto-validate 
+            <form on-submit="fetchEmailProviders" on-keyup="_submitOnEnter">
+              <paper-input
+                value="{{userEmail}}"
+                id="login-input-mail"
+                required
+                auto-validate$="[[userEmail]]"
                 error-message="[[errorMessageEmail]]"
                 label="[[labelEmail]]"
-                type="email" 
+                type="email"
                 class="m-b-1">
               </paper-input>
 
               <paper-button class="email" on-tap="fetchEmailProviders">
-                <span>Sign in</span>
+                <span>SIGN IN</span>
               </paper-button>
               <paper-button class="email" on-tap="_closeDialog">
-                <span>Cancel</span>
+                <span>CANCEL</span>
               </paper-button>
             </form>
           </iron-form>
@@ -285,7 +325,7 @@
         Email available providers screen
       -->
       <template is="dom-if" if="[[email]]">
-        <div id="email-providers-box" class="screen">
+        <div name="email-providers">
           <nav id="providers">
             <template is="dom-if" if="[[availableProviders.google]]">
               <paper-button class="google" on-tap="signInGoogle">
@@ -317,32 +357,34 @@
           </nav>
 
           <template is="dom-if" if="[[availableProviders.password]]">
-            <iron-form id="password-login-box">
-              <form on-submit="signInWithEmailAndPassword" onkeyup="[[_submitOnEnter]]">
-                <paper-input value="{{userEmail}}"
-                  disabled="[[disabled]]"
-                  type="email"
-                  class="m-b-1"
-                ></paper-input>
-                <paper-input 
-                  value="{{userPassword}}"
-                  id="login-input-pass"
-                  label="[[labelPassSignIn]]"
-                  type="password"
-                  class="m-b-1"
-                ></paper-input>
+            <div id="password-login">
+              <iron-form>
+                <form on-submit="signInWithEmailAndPassword" on-keyup="_submitOnEnter">
+                  <paper-input value="{{userEmail}}"
+                               disabled="[[disabled]]"
+                               type="email"
+                               class="m-b-1"
+                  ></paper-input>
+                  <paper-input
+                    value="{{userPassword}}"
+                    id="login-input-pass"
+                    label="[[labelPassSignIn]]"
+                    type="password"
+                    class="m-b-1"
+                  ></paper-input>
 
-                <a href on-click="_forgotPass">Forgot Your Password?</a>
+                  <a href on-click="_forgotPass">Forgot Your Password?</a>
 
-                <paper-button class="email" on-tap="signInWithEmailAndPassword">
-                  <span>Sign in</span>
-                </paper-button>
-              </form>
-            </iron-form>
+                  <paper-button class="email" on-tap="signInWithEmailAndPassword">
+                    <span>Sign in</span>
+                  </paper-button>
+                </form>
+              </iron-form>
+            </div>
           </template>
 
           <paper-button class="email" on-tap="_closeDialog">
-            <span>Cancel</span>
+            <span>CANCEL</span>
           </paper-button>
         </div>
       </template>
@@ -351,24 +393,22 @@
         Recover password screen
       -->
       <template is="dom-if" if="[[email]]">
-        <div id="forgot-pass-box" class="screen">
+        <div name="forgot-pass">
           <iron-form id="forgot-pass-form">
             <form>
-
               <h3>Recover password</h3>
-
               <p>Get instructions sent to this email that explain how to reset your password</p>
 
               <paper-input value="{{userEmail}}"
-                            type="text"
-                            class="m-b-1"
+                           type="text"
+                           class="m-b-1"
               ></paper-input>
 
               <paper-button class="email" on-tap="passwordReset">
                 <span>Send</span>
               </paper-button>
               <paper-button class="email" on-tap="_closeDialog">
-                <span>Cancel</span>
+                <span>CANCEL</span>
               </paper-button>
             </form>
           </iron-form>
@@ -379,7 +419,7 @@
         Email sent verification screen
       -->
       <template is="dom-if" if="[[email]]">
-        <div id="email-sent-box" class="screen">
+        <div name="email-sent">
           <h3>Check your email</h3>
 
           <p>Follow the instructions sent to <strong>[[userEmail]]</strong> to recover your password.</p>
@@ -394,46 +434,46 @@
         Email Sign-up screen
       -->
       <template is="dom-if" if="[[email]]">
-        <div id="email-signup-box" class="screen">
+        <div name="email-signup">
           <iron-form id="email-signup-form">
-            <form on-submit="createUserWithEmailAndPassword" onkeyup="[[_submitOnEnter]]">
+            <form on-submit="createUserWithEmailAndPassword" on-keyup="_submitOnEnter">
               <paper-input value="{{userEmail}}"
-                            class="m-b-1"
-                            disabled="[[disabled]]"
-                            type="email">
+                           class="m-b-1"
+                           disabled="[[disabled]]"
+                           type="email">
               </paper-input>
 
-              <paper-input value="{{userName}}" 
-                            auto-validate 
-                            class="m-b-1"
-                            id="signup-input-name"
-                            label="First & last name"
-                            required
-                            type="text">
+              <paper-input value="{{userName}}"
+                           auto-validate$="[[userName]]"
+                           class="m-b-1"
+                           id="signup-input-name"
+                           label="First & last name"
+                           required
+                           type="text">
               </paper-input>
 
               <paper-input value="{{userPassword}}"
-                            auto-validate
-                            id="signup-input-pass"
-                            class="m-b-1"
-                            error-message="[[errorMessagePass]]"
-                            label="[[labelPassSignUp]]"
-                            minlength="[[minLength]]"
-                            required
-                            type="password">
+                           auto-validate$="[[userPassword]]"
+                           id="signup-input-pass"
+                           class="m-b-1"
+                           error-message="[[errorMessagePass]]"
+                           label="[[labelPassSignUp]]"
+                           minlength="[[minLength]]"
+                           required
+                           type="password">
               </paper-input>
 
               <paper-button class="email" on-tap="createUserWithEmailAndPassword">
                 <span>Sign Up</span>
               </paper-button>
               <paper-button class="email" on-tap="_closeDialog">
-                <span>Cancel</span>
+                <span>CANCEL</span>
               </paper-button>
             </form>
           </iron-form>
         </div>
       </template>
-    </div>
+    </iron-pages>
   </template>
 
   <script>
@@ -455,173 +495,6 @@
        */
       static get is() {
         return 'skeleton-auth';
-      }
-
-      /**
-       * Constructor
-       */
-      constructor() {
-        super();
-      }
-
-      /**
-       * @return {object}
-       */
-      static get properties() {
-        return {
-          /*
-           * Currently open view.
-           */
-          openView: {
-            type: String,
-            value: 'options',
-          },
-
-          /*
-           * Error listener.
-           */
-          onError: {
-            type: Function,
-          },
-
-          /*
-           * Available providers for the given email.
-           */
-          availableProviders: {
-            type: Array,
-            value: [],
-            notify: true,
-          },
-
-          /*
-           * The label for the email input.
-           */
-          labelEmail: {
-            type: String,
-            value: 'email@example.com',
-          },
-
-          /*
-           * The label for the sign in password input.
-           */
-          labelPassSignIn: {
-            type: String,
-            value: 'Password input',
-          },
-
-          /*
-           * The label for the sign up password input.
-           */
-          labelPassSignUp: {
-            type: String,
-            value: 'Choose password',
-          },
-
-          /*
-           * The minimum length of the input value.
-           */
-          minLength: {
-            type: Number,
-            value: 6,
-          },
-
-          /*
-           * The error message to display when the email input is invalid.
-           */
-          errorMessageEmail: {
-            type: String,
-            value: 'Please enter a valid email',
-          },
-
-          /*
-           * The error message to display when the password input is invalid.
-           */
-           errorMessagePass: {
-            type: String,
-            value: 'Password should be at least 6 characters',
-          },
-
-          /*
-           * Disable email input on sign-up form
-           */
-          disabled: {
-            type: Boolean,
-            value: true,
-          },
-
-          userEmail: {
-            type: String,
-            value: null,
-          },
-
-          userPassword: {
-            type: String,
-            value: null,
-          },
-
-          phoneNumber: {
-            type: String,
-            value: null,
-          },
-
-          phoneCode: {
-            type: String,
-            value: null,
-          },
-
-          confirmationCode: {
-            type: String,
-            value: null,
-          },
-
-          userName: {
-            type: String,
-            value: null,
-          },
-
-          recaptchaContainer: {
-            type: String,
-            value: null,
-          },
-        };
-      }
-
-      /**
-       * Call to open the email dialog
-       *
-       * @private
-       */
-      _chooseEmail() {
-        this.openView = 'email-login';
-      }
-
-      /**
-       * Call to open the phone dialog
-       *
-       * @private
-       */
-       _choosePhone() {
-        this.openView = 'phone-login';
-      }
-
-      /**
-       * Call to open the forgot password dialog
-       *
-       * @param {Object} e
-       * @private
-       */
-       _forgotPass(e) {
-         e.preventDefault();
-        this.openView = 'forgot-pass';
-      }
-
-      /**
-       * Call to close the email dialog
-       *
-       * @private
-       */
-      _closeDialog() {
-        this.openView = 'options';
       }
     }
 
