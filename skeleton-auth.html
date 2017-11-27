@@ -2,12 +2,10 @@
 <link rel="import" href="../polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-input/paper-input.html">
-<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../neon-animation/web-animations.html">
-<link rel="import" href="../paper-listbox/paper-listbox.html">
-<link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-styles/classes/typography.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/maps-icons.html">
 <link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="./auth-mixin.html">
 <link rel="import" href="./icons.html">
@@ -90,15 +88,49 @@
         text-transform: none;
       }
 
-      paper-dropdown-menu {
+      .custom-select {
+        display: block;
+        padding: 8px 0;        
         margin-right: 20px;
         max-width: 90px;
+        position: relative;
         text-align: center;
-        touch-action: none;
+      }
+
+      .custom-select > .custom-select-label {
+        display: inline-block;
+        line-height: 1.5;
+        border-bottom: 1px solid var(--paper-input-container-color, var(--secondary-text-color));
+        width: 90px;
+      }
+
+      .custom-select > .custom-select-label:empty::after {
+        display: inline-block;
+      }
+
+      .arrow-down-icon {
+        float: right;
+      }
+
+      .custom-select > select {
+        background: none;
+        border: none;
+        bottom: 0;
+        cursor: pointer;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+      .custom-select > select:focus {
+        outline: none;
       }
 
       .phone-number {
         width: 100%;
+        align-items: flex-end;
         @apply --layout-inline;
       }
 
@@ -237,15 +269,19 @@
           <iron-form id="phone-login-form">
             <form on-submit="signInWithPhone" on-keyup="_submitOnEnter">
               <div class="phone-number">
-                <paper-dropdown-menu value="{{phoneCode}}" dynamic-align>
-                  <paper-listbox slot="dropdown-content" class="dropdown-content" selected="186">
-                    <template is="dom-repeat" items="{{dialingCodes}}">
-                      <paper-item label$="[[item.phoneCode]]">
+                <label class="custom-select" for="phone-code-select">
+                  <span class="custom-select-label">
+                    [[phoneCode]] 
+                    <iron-icon class="arrow-down-icon" icon="icons:arrow-drop-down"></iron-icon>
+                  </span>
+                  <select value="{{phoneCode::change}}" id="phone-code-select">
+                    <template is="dom-repeat" items="[[dialingCodes]]">
+                      <option value="[[item.phoneCode]]">
                         [[item.countryName]] [[item.phoneCode]]
-                      </paper-item>
+                      </option>
                     </template>
-                  </paper-listbox>
-                </paper-dropdown-menu>
+                  </select>
+                </label>
 
                 <paper-input value="{{phoneNumber}}"
                              label="Phone number"
