@@ -88,7 +88,7 @@
           // Select the sign in email button
           const emailSignin = skeletonAuth
             .shadowRoot
-            .querySelector('#email-login-box .email');
+            .querySelector('[name="email-login"] .email');
 
           // Click to sign in
           MockInteractions.tap(emailSignin);
@@ -104,7 +104,7 @@
             // Select the sign in password button
             const passSignin = skeletonAuth
               .shadowRoot
-              .querySelector('#email-providers-box .email');
+              .querySelector('[name="email-providers"] .email');
 
             // Click to sign in
             MockInteractions.tap(passSignin);
