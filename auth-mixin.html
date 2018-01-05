@@ -1183,6 +1183,9 @@
             this.fetchEmailProviders();
           }
         });
+        firebase.auth().onAuthStateChanged(() => {
+          this.clear();
+        });
       }
 
       /**
@@ -1440,12 +1443,14 @@
       }
 
       /**
-       * Call to close the email dialog
+       * Reset email and password
        *
-       * @private
        */
-      _closeDialog() {
-        this.selected = 'options';
+      clear() {
+        this.userEmail = null;
+        this.userPassword = null;
+        this.phoneNumber = null;
+        this.phoneCode = '+1';
       }
     };
   };

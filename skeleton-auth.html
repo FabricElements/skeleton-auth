@@ -284,12 +284,12 @@
                 </label>
 
                 <paper-input value="{{phoneNumber}}"
-                             label="Phone number"
-                             type="text"
+                             allowed-pattern="[\d]"
                              id="phone-input"
+                             label="Phone number"
                              prevent-invalid-input
                              type="number"
-                             allowed-pattern="[\d]"
+                             type="text"
                 ></paper-input>
               </div>
               <paper-button id="sign-in-button" class="email" on-tap="signInWithPhone">
@@ -313,9 +313,9 @@
           <iron-form id="confirm-code-form">
             <form on-submit="confirmCode" on-keyup="_submitOnEnter">
               <paper-input value="{{confirmationCode}}"
+                           class="m-b-1"
                            label="6-digit code"
                            type="text"
-                           class="m-b-1"
               ></paper-input>
               <paper-button class="email" on-tap="confirmCode">
                 <span>Continue</span>
@@ -335,16 +335,15 @@
         <div name="email-login">
           <iron-form id="email-login-form">
             <form on-submit="fetchEmailProviders" on-keyup="_submitOnEnter">
-              <paper-input
-                value="{{userEmail}}"
-                id="login-input-mail"
-                required
-                auto-validate$="[[userEmail]]"
-                error-message="[[errorMessageEmail]]"
-                label="[[labelEmail]]"
-                type="email"
-                class="m-b-1">
-              </paper-input>
+              <paper-input value="{{userEmail}}"
+                           id="login-input-mail"
+                           required
+                           auto-validate$="[[userEmail]]"
+                           error-message="[[errorMessageEmail]]"
+                           label="[[labelEmail]]"
+                           type="email"
+                           class="m-b-1"
+              ></paper-input>
 
               <paper-button class="email" on-tap="fetchEmailProviders">
                 <span>Sign In</span>
@@ -397,16 +396,15 @@
               <iron-form>
                 <form on-submit="signInWithEmailAndPassword" on-keyup="_submitOnEnter">
                   <paper-input value="{{userEmail}}"
+                               class="m-b-1"
                                disabled="[[disabled]]"
                                type="email"
-                               class="m-b-1"
                   ></paper-input>
-                  <paper-input
-                    value="{{userPassword}}"
-                    id="login-input-pass"
-                    label="[[labelPassSignIn]]"
-                    type="password"
-                    class="m-b-1"
+                  <paper-input value="{{userPassword}}"
+                               class="m-b-1"
+                               id="login-input-pass"
+                               label="[[labelPassSignIn]]"
+                               type="password"
                   ></paper-input>
 
                   <a href on-click="_forgotPass">Forgot Your Password?</a>
@@ -436,8 +434,8 @@
               <p>Get instructions sent to this email that explain how to reset your password</p>
 
               <paper-input value="{{userEmail}}"
-                           type="text"
                            class="m-b-1"
+                           type="text"
               ></paper-input>
 
               <paper-button class="email" on-tap="passwordReset">
@@ -476,8 +474,9 @@
               <paper-input value="{{userEmail}}"
                            class="m-b-1"
                            disabled="[[disabled]]"
-                           type="email">
-              </paper-input>
+                           id="signup-input-email"
+                           type="email"
+              ></paper-input>
 
               <paper-input value="{{userName}}"
                            auto-validate$="[[userName]]"
@@ -485,19 +484,19 @@
                            id="signup-input-name"
                            label="First & last name"
                            required
-                           type="text">
-              </paper-input>
+                           type="text"
+              ></paper-input>
 
               <paper-input value="{{userPassword}}"
                            auto-validate$="[[userPassword]]"
-                           id="signup-input-pass"
                            class="m-b-1"
                            error-message="[[errorMessagePass]]"
+                           id="signup-input-pass"
                            label="[[labelPassSignUp]]"
                            minlength="[[minLength]]"
                            required
-                           type="password">
-              </paper-input>
+                           type="password"
+              ></paper-input>
 
               <paper-button class="email" on-tap="createUserWithEmailAndPassword">
                 <span>Sign Up</span>
@@ -531,6 +530,16 @@
        */
       static get is() {
         return 'skeleton-auth';
+      }
+
+      /**
+       * Call to close the email dialog
+       *
+       * @private
+       */
+      _closeDialog() {
+        this.clear();
+        this.selected = 'options';
       }
     }
 
