@@ -102,7 +102,15 @@
 
       <dom-if if="[[!signedIn]]">
         <template>
-          <skeleton-auth google facebook twitter github anonymous email phone on-error="handleError">
+          <skeleton-auth google
+                         facebook
+                         twitter
+                         github
+                         anonymous
+                         email
+                         phone
+                         popup
+                         on-error="handleError">
           </skeleton-auth>
         </template>
       </dom-if>
@@ -164,7 +172,7 @@
           const element = document.querySelector('skeleton-auth');
           element.signOut();
         }
-        
+
         /**
          * jsonLog
          *

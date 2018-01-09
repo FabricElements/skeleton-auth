@@ -21,6 +21,13 @@
       static get properties() {
         return {
           /**
+           * ign-in provider with pop-up.
+           */
+          popup: {
+            type: Boolean,
+            value: false,
+          },
+          /**
            * Allow Google Sign-in.
            */
           google: {
@@ -96,30 +103,8 @@
            * Available providers for the given email.
            */
           availableProviders: {
-            type: Array,
-            value: [],
+            type: Object,
             notify: true,
-          },
-          /*
-           * The label for the email input.
-           */
-          labelEmail: {
-            type: String,
-            value: 'email@example.com',
-          },
-          /*
-           * The label for the sign in password input.
-           */
-          labelPassSignIn: {
-            type: String,
-            value: 'Password input',
-          },
-          /*
-           * The label for the sign up password input.
-           */
-          labelPassSignUp: {
-            type: String,
-            value: 'Choose password',
           },
           /*
            * The minimum length of the input value.
@@ -127,20 +112,6 @@
           minLength: {
             type: Number,
             value: 6,
-          },
-          /*
-           * The error message to display when the email input is invalid.
-           */
-          errorMessageEmail: {
-            type: String,
-            value: 'Please enter a valid email',
-          },
-          /*
-           * The error message to display when the password input is invalid.
-           */
-          errorMessagePass: {
-            type: String,
-            value: 'Password should be at least 6 characters',
           },
           /*
            * Disable email input on sign-up form
@@ -183,22 +154,6 @@
           confirmationCode: {
             type: String,
             value: null,
-          },
-          /*
-           * User name
-           */
-          userName: {
-            type: String,
-            value: null,
-          },
-          /*
-           * Returns true when Sign up form data is completed
-           */
-          _emailSignUpReady: {
-            type: Boolean,
-            value: false,
-            readOnly: true,
-            computed: '_computeSignUpReady(userEmail, userName, userPassword)',
           },
           /*
            * Country dial codes.
@@ -449,7 +404,7 @@
               {
                 countryCode: 'DO',
                 countryName: 'Dominican Republic',
-                phoneCode: '+1-809 and 1-829',
+                phoneCode: '+1',
               },
               {
                 countryCode: 'TL',
@@ -904,7 +859,7 @@
               {
                 countryCode: 'PR',
                 countryName: 'Puerto Rico',
-                phoneCode: '+1-787 and 1-939',
+                phoneCode: '+1',
               },
               {
                 countryCode: 'QA',
@@ -1186,15 +1141,16 @@
        */
       ready() {
         super.ready();
-        firebase.auth().getRedirectResult().catch((error) => {
-          if (error.code === 'auth/account-exists-with-different-credential') {
-            this.userEmail = error.email;
-            this.fetchEmailProviders();
-          }
-        });
-        firebase.auth().onAuthStateChanged(() => {
-          this.clear();
-        });
+        firebase.auth()
+          .getRedirectResult()
+          .catch((error) => {
+            if (error.code === 'auth/account-exists-with-different-credential') {
+              this.userEmail = error.email;
+              this.fetchEmailProviders();
+            }
+          });
+        // Clear on state change
+        firebase.auth().onAuthStateChanged(() => this.clear());
       }
 
       /**
@@ -1233,19 +1189,26 @@
        * Anonymous Sign-in function.
        */
       signInAnonymously() {
-        firebase.auth().signInAnonymously().catch((error) => {
-          this.error = error;
-        });
+        firebase.auth().signInAnonymously().catch((error) => this.error = error);
       }
 
       /**
        * Sign In the user.
        *
-       *  @param {Object} provider
+       *  @param {?String|any} provider
        */
       _signIn(provider) {
-        firebase.auth().signInWithRedirect(provider).catch((error) => {
+        let base;
+        if (this.popup) base = firebase.auth().signInWithPopup(provider);
+        else base = firebase.auth().signInWithRedirect(provider);
+        if (!base) return;
+        base.catch((error) => {
           this.error = error;
+          // Handle popup blocked
+          if (error.code === 'auth/popup-blocked') {
+            this.popup = false;
+            this._signIn(provider);
+          }
         });
       }
 
@@ -1261,14 +1224,7 @@
        */
       _submitOnEnter(event) {
         // check if 'enter' was pressed
-        if (event.keyCode === 13) {
-          // Inside this event handler, `this` context refers to
-          // event.currentTarget; we cannot use event.currentTarget because
-          // Polymer changes it to point to the current Polymer element.
-          this.dispatchEvent(new Event('submit', {
-            bubbles: true,
-          }));
-        }
+        if (event.keyCode === 13) this._submitForm(event);
       }
 
       /**
@@ -1287,19 +1243,12 @@
               github: data.includes('github.com'),
             };
 
-            if (data.length === 0) {
-              /**
-               * Show account creation form if the email
-               * is not registered in our database
-               */
-              this.selected = 'email-signup';
-            } else {
-              /**
-               * If there's any provider option
-               * for this email, show the options
-               */
-              this.selected = 'email-providers';
-            }
+            /**
+             * Show account creation form if the email
+             * is not registered in our database
+             */
+            const notRegistered = data.length === 0;
+            this.selected = notRegistered ? 'email-signup' : 'email-providers';
           }).catch((error) => {
           this.error = error;
         });
@@ -1315,21 +1264,19 @@
           .signInWithEmailAndPassword(this.userEmail, this.userPassword)
           .catch((error) => {
             this.error = error;
+            this.userEmail = this.userEmail ? this.userEmail : null;
+            this.userPassword = null;
           });
-        this.userEmail = this.userEmail;
-        this.userPassword = null;
       }
 
       /**
        * Password reset.
        */
       passwordReset() {
-        firebase.auth().sendPasswordResetEmail(this.userEmail)
-          .then(() => {
-            this.selected = 'email-sent';
-          }).catch((error) => {
-          this.error = error;
-        });
+        firebase.auth()
+          .sendPasswordResetEmail(this.userEmail)
+          .then(() => this.selected = 'forgot-sent')
+          .catch((error) => this.error = error);
       }
 
       /**
@@ -1338,13 +1285,6 @@
       createUserWithEmailAndPassword() {
         firebase.auth()
           .createUserWithEmailAndPassword(this.userEmail, this.userPassword)
-          .then((user) => {
-            this.userEmail = null;
-            this.userPassword = null;
-            return firebase.auth().currentUser.updateProfile({
-              displayName: this.userName,
-            });
-          })
           .catch((error) => {
             this.error = error;
             this.userPassword = null;
@@ -1372,7 +1312,8 @@
 
         const phoneComplete = this.phoneCode + this.phoneNumber;
 
-        firebase.auth().signInWithPhoneNumber(phoneComplete, appVerifier)
+        firebase.auth()
+          .signInWithPhoneNumber(phoneComplete, appVerifier)
           .then((confirmationResult) => {
             /**
              * SMS sent. Prompt user to type the code
@@ -1391,11 +1332,12 @@
 
       /**
        * Remove recaptcha
+       * @private
        */
       _removeRecaptcha() {
-        const element = document.querySelector('#recaptchaContainer');
+        const element = document.getElementById('recaptchaContainer');
         if (!element) return;
-        element.parentElement.removeChild(element);
+        element.remove();
       }
 
       /**
@@ -1420,13 +1362,14 @@
 
       /**
        * sign out
-       * @return {Promise}
        */
       signOut() {
         this.error = null;
-        return firebase.auth().signOut().catch((error) => {
-          this.error = error;
-        });
+        firebase.auth()
+          .signOut()
+          .catch((error) => {
+            this.error = error;
+          });
       }
 
       /**
@@ -1448,40 +1391,31 @@
       }
 
       /**
-       * Call to open the forgot password dialog
-       *
-       * @param {Object} e
-       * @private
-       */
-      _forgotPass(e) {
-        e.preventDefault();
-        this.selected = 'forgot-pass';
-      }
-
-      /**
-       * Check if the sign up form data is complete
-       *
-       * @param {string} email
-       * @param {string} name
-       * @param {string} password
-       * @return {*}
-       * @private
-       */
-      _computeSignUpReady(email, name, password) {
-        return email && name && password;
-      }
-
-      /**
        * Reset email and password
        *
        */
       clear() {
+        // Reset user basics
         this.userEmail = null;
         this.userPassword = null;
         this.phoneNumber = null;
         this.phoneCode = '+1';
-        this.userName = null;
+        // Reset view
         this.selected = 'options';
+        // Reset providers
+        this.availableProviders = null;
+        // Reset errors
+        this.error = null;
+      }
+
+      /**
+       * Submit form
+       * @param {object} event
+       * @private
+       */
+      _submitForm(event) {
+        const form = event.target.closest('iron-form');
+        if (form) form.fire('submit');
       }
     };
   };

@@ -15,7 +15,6 @@
     "paper-item": "PolymerElements/paper-item#^2.0.0",
     "web-animations-js": "web-animations/web-animations-js#^2.3.1",
     "iron-pages": "PolymerElements/iron-pages#^2.0.0",
-    "iron-selector": "PolymerElements/iron-selector#^2.0.0",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.1"
   },
   "devDependencies": {
