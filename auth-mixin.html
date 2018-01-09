@@ -1355,12 +1355,10 @@
        * Sign In with phone number.
        */
       signInWithPhone() {
+        this._removeRecaptcha();
         const recaptchaContainer = document.createElement('div');
+        recaptchaContainer.id = 'recaptchaContainer';
         document.body.appendChild(recaptchaContainer);
-
-        const cleanUp = () => {
-          recaptchaContainer.parentElement.removeChild(recaptchaContainer);
-        };
 
         if (!recaptchaContainer) {
           this.error = new Error('Invalid recaptcha-container');
@@ -1383,12 +1381,21 @@
              */
             this.confirmationResult = confirmationResult;
             this.showConfirmationCodeScreen();
-            cleanUp();
+            this._removeRecaptcha();
           })
           .catch((error) => {
             this.error = error;
-            cleanUp();
+            this._removeRecaptcha();
           });
+      }
+
+      /**
+       * Remove recaptcha
+       */
+      _removeRecaptcha() {
+        const element = document.querySelector('#recaptchaContainer');
+        if (!element) return;
+        element.parentElement.removeChild(element);
       }
 
       /**
