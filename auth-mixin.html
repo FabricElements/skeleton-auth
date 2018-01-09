@@ -192,6 +192,15 @@
             value: null,
           },
           /*
+           * Returns true when Sign up form data is completed
+           */
+          _emailSignUpReady: {
+            type: Boolean,
+            value: false,
+            readOnly: true,
+            computed: '_computeSignUpReady(userEmail, userName, userPassword)',
+          },
+          /*
            * Country dial codes.
            */
           dialingCodes: {
@@ -1443,6 +1452,19 @@
       }
 
       /**
+       * Check if the sign up form data is complete
+       *
+       * @param {string} email
+       * @param {string} name
+       * @param {string} password
+       * @return {*}
+       * @private
+       */
+      _computeSignUpReady(email, name, password) {
+        return email && name && password;
+      }
+
+      /**
        * Reset email and password
        *
        */
@@ -1451,6 +1473,8 @@
         this.userPassword = null;
         this.phoneNumber = null;
         this.phoneCode = '+1';
+        this.userName = null;
+        this.selected = 'options';
       }
     };
   };

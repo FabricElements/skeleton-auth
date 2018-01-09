@@ -289,7 +289,6 @@
                              label="Phone number"
                              prevent-invalid-input
                              type="number"
-                             type="text"
                 ></paper-input>
               </div>
               <paper-button id="sign-in-button" class="email" on-tap="signInWithPhone">
@@ -315,7 +314,7 @@
               <paper-input value="{{confirmationCode}}"
                            class="m-b-1"
                            label="6-digit code"
-                           type="text"
+                           type="number"
               ></paper-input>
               <paper-button class="email" on-tap="confirmCode">
                 <span>Continue</span>
@@ -458,7 +457,7 @@
 
           <p>Follow the instructions sent to <strong>[[userEmail]]</strong> to recover your password.</p>
 
-          <paper-button class="email" on-tap="_chooseEmail">
+          <paper-button class="email" on-tap="_closeDialog">
             <span>Done</span>
           </paper-button>
         </div>
@@ -498,7 +497,7 @@
                            type="password"
               ></paper-input>
 
-              <paper-button class="email" on-tap="createUserWithEmailAndPassword">
+              <paper-button class="email" disabled$="[[!_emailSignUpReady]]" on-tap="createUserWithEmailAndPassword">
                 <span>Sign Up</span>
               </paper-button>
               <paper-button class="email" on-tap="_closeDialog">
