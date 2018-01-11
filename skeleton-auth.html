@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="./auth-mixin.html">
+<link rel="import" href="./auth-mixin/auth-mixin.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-styles/classes/typography.html">
@@ -268,40 +268,43 @@
       <template is="dom-if" if="[[phone]]" restamp="true">
         <section name="phone-login">
           <iron-form id="phone-login-form" on-submit="signInWithPhone">
-            <div class="phone-number">
-              <label class="custom-select" for="phone-code-select">
-                <span class="custom-select-label">
-                  [[phoneCode]]
-                  <iron-icon class="arrow-down-icon"
-                             icon="icons:arrow-drop-down"></iron-icon>
-                </span>
-                <select value="{{phoneCode::change}}"
-                        id="phone-code-select">
-                  <template is="dom-repeat" items="[[dialingCodes]]">
-                    <option value="[[item.phoneCode]]">
-                      [[item.countryName]] [[item.phoneCode]]
-                    </option>
-                  </template>
-                </select>
-              </label>
-              <paper-input value="{{phoneNumber}}"
-                           allowed-pattern="[\d]"
-                           id="phone-input"
-                           label="Phone number"
-                           prevent-invalid-input
-                           type="number"
-                           on-keydown="_submitOnEnter"
-              ></paper-input>
-            </div>
-            <paper-button id="sign-in-button"
-                          class="action"
-                          on-tap="signInWithPhone"
-                          disabled$="[[!phoneNumber]]">
-              [[labelContinue]]
-            </paper-button>
-            <paper-button class="cancel" on-tap="_closeDialog">
-              [[labelCancel]]
-            </paper-button>
+            <form>
+              <div class="phone-number">
+                <label class="custom-select" for="phone-code-select">
+                  <span class="custom-select-label">
+                    [[phoneCode]]
+                    <iron-icon class="arrow-down-icon"
+                               icon="icons:arrow-drop-down"></iron-icon>
+                  </span>
+                  <select value="{{phoneCode::change}}"
+                          id="phone-code-select">
+                    <template is="dom-repeat" items="[[dialingCodes]]">
+                      <option value="[[item.phoneCode]]">
+                        [[item.countryName]] [[item.phoneCode]]
+                      </option>
+                    </template>
+                  </select>
+                </label>
+                <paper-input value="{{phoneNumber}}"
+                             allowed-pattern="[\d]"
+                             autofocus
+                             id="phone-input"
+                             label="Phone number"
+                             prevent-invalid-input
+                             type="number"
+                             on-keydown="_submitOnEnter"
+                ></paper-input>
+              </div>
+              <paper-button id="sign-in-button"
+                            class="action"
+                            on-tap="signInWithPhone"
+                            disabled$="[[!phoneNumber]]">
+                [[labelContinue]]
+              </paper-button>
+              <paper-button class="cancel" on-tap="_closeDialog">
+                [[labelCancel]]
+              </paper-button>
+            </form>
           </iron-form>
         </section>
         <!--
@@ -309,20 +312,23 @@
         -->
         <section name="confirm-code">
           <iron-form id="confirm-code-form" on-submit="confirmCode">
-            <paper-input value="{{confirmationCode}}"
-                         label="6-digit code"
-                         type="number"
-                         on-keydown="_submitOnEnter"
-            ></paper-input>
-            <paper-button class="action"
-                          on-tap="confirmCode"
-                          disabled$="[[!confirmationCode]]">
-              [[labelContinue]]
-            </paper-button>
-            <paper-button class="cancel"
-                          on-tap="_closeDialog">
-              [[labelCancel]]
-            </paper-button>
+            <form>
+              <paper-input value="{{confirmationCode}}"
+                           autofocus
+                           label="6-digit code"
+                           type="number"
+                           on-keydown="_submitOnEnter"
+              ></paper-input>
+              <paper-button class="action"
+                            on-tap="confirmCode"
+                            disabled$="[[!confirmationCode]]">
+                [[labelContinue]]
+              </paper-button>
+              <paper-button class="cancel"
+                            on-tap="_closeDialog">
+                [[labelCancel]]
+              </paper-button>
+            </form>
           </iron-form>
         </section>
       </template>
@@ -331,23 +337,26 @@
       -->
       <section name="email-login">
         <iron-form id="email-login-form" on-submit="fetchEmailProviders">
-          <paper-input id="login-input-mail"
-                       value="{{userEmail}}"
-                       required
-                       auto-validate$="[[userEmail]]"
-                       error-message="[[errorMessageEmail]]"
-                       label="[[labelEmailInput]]"
-                       type="email"
-                       on-keydown="_submitOnEnter"
-          ></paper-input>
-          <paper-button class="action"
-                        on-tap="fetchEmailProviders"
-                        disabled$="[[!userEmail]]">
-            [[labelSignIn]]
-          </paper-button>
-          <paper-button class="cancel" on-tap="_closeDialog">
-            [[labelCancel]]
-          </paper-button>
+          <form>
+            <paper-input id="login-input-mail"
+                         autofocus
+                         value="{{userEmail}}"
+                         required
+                         auto-validate$="[[userEmail]]"
+                         error-message="[[errorMessageEmail]]"
+                         label="[[labelEmailInput]]"
+                         type="email"
+                         on-keydown="_submitOnEnter"
+            ></paper-input>
+            <paper-button class="action"
+                          on-tap="fetchEmailProviders"
+                          disabled$="[[!userEmail]]">
+              [[labelSignIn]]
+            </paper-button>
+            <paper-button class="cancel" on-tap="_closeDialog">
+              [[labelCancel]]
+            </paper-button>
+          </form>
         </iron-form>
       </section>
       <!--
@@ -387,26 +396,30 @@
         <template is="dom-if" if="[[availableProviders.password]]" restamp="true">
           <div id="password-login">
             <iron-form on-submit="signInWithEmailAndPassword">
-              <paper-input value="{{userEmail}}"
-                           disabled="[[disabled]]"
-                           type="email"
-              ></paper-input>
-              <paper-input value="{{userPassword}}"
-                           id="login-input-pass"
-                           label="[[labelPassSignIn]]"
-                           type="password"
-                           on-keydown="_submitOnEnter"
-              ></paper-input>
-              <paper-button class="forgot-password"
-                            on-tap="_forgotPass">
-                <iron-icon icon="auth:help"></iron-icon>
-                [[labelForgotPassword]]
-              </paper-button>
-              <paper-button class="action"
-                            on-tap="signInWithEmailAndPassword"
-                            disabled$="[[!userPassword]]">
-                [[labelSignIn]]
-              </paper-button>
+              <form>
+                <paper-input value="{{userEmail}}"
+                             autofocus
+                             disabled="[[disabled]]"
+                             type="email"
+                ></paper-input>
+                <paper-input value="{{userPassword}}"
+                             autofocus
+                             id="login-input-pass"
+                             label="[[labelPassSignIn]]"
+                             type="password"
+                             on-keydown="_submitOnEnter"
+                ></paper-input>
+                <paper-button class="forgot-password"
+                              on-tap="_forgotPass">
+                  <iron-icon icon="auth:help"></iron-icon>
+                  [[labelForgotPassword]]
+                </paper-button>
+                <paper-button class="action"
+                              on-tap="signInWithEmailAndPassword"
+                              disabled$="[[!userPassword]]">
+                  [[labelSignIn]]
+                </paper-button>
+              </form>
             </iron-form>
           </div>
         </template>
@@ -421,21 +434,24 @@
       <section name="forgot-pass">
         <iron-form id="forgot-pass-form"
                    on-submit="passwordReset">
-          <h3>[[headlineForgot]]</h3>
-          <p>[[descriptionForgot]]</p>
-          <paper-input value="{{userEmail}}"
-                       type="text"
-                       on-keydown="_submitOnEnter"
-          ></paper-input>
-          <paper-button class="action"
-                        on-tap="passwordReset"
-                        disabled$="[[!userEmail]]">
-            [[labelSend]]
-          </paper-button>
-          <paper-button class="cancel"
-                        on-tap="_closeForgot">
-            [[labelCancel]]
-          </paper-button>
+          <form>
+            <h3>[[headlineForgot]]</h3>
+            <p>[[descriptionForgot]]</p>
+            <paper-input value="{{userEmail}}"
+                         autofocus
+                         type="text"
+                         on-keydown="_submitOnEnter"
+            ></paper-input>
+            <paper-button class="action"
+                          on-tap="passwordReset"
+                          disabled$="[[!userEmail]]">
+              [[labelSend]]
+            </paper-button>
+            <paper-button class="cancel"
+                          on-tap="_closeForgot">
+              [[labelCancel]]
+            </paper-button>
+          </form>
         </iron-form>
       </section>
       <!--
@@ -456,30 +472,34 @@
         <section name="email-signup">
           <iron-form id="email-signup-form"
                      on-submit="createUserWithEmailAndPassword">
-            <paper-input value="{{userEmail}}"
-                         disabled="[[disabled]]"
-                         id="signup-input-email"
-                         type="email"
-            ></paper-input>
-            <paper-input value="{{userPassword}}"
-                         auto-validate$="[[userPassword]]"
-                         error-message="[[errorMessagePass]]"
-                         id="signup-input-pass"
-                         label="[[labelPassSignUp]]"
-                         minlength="[[minLength]]"
-                         required
-                         type="password"
-                         on-keydown="_submitOnEnter"
-            ></paper-input>
-            <paper-button class="action"
-                          disabled$="[[!userPassword]]"
-                          on-tap="createUserWithEmailAndPassword">
-              [[labelSignUp]]
-            </paper-button>
-            <paper-button class="cancel"
-                          on-tap="_closeDialog">
-              [[labelCancel]]
-            </paper-button>
+            <form>
+              <paper-input value="{{userEmail}}"
+                           autofocus
+                           disabled="[[disabled]]"
+                           id="signup-input-email"
+                           type="email"
+              ></paper-input>
+              <paper-input value="{{userPassword}}"
+                           autofocus
+                           auto-validate$="[[userPassword]]"
+                           error-message="[[errorMessagePass]]"
+                           id="signup-input-pass"
+                           label="[[labelPassSignUp]]"
+                           minlength="[[minLength]]"
+                           required
+                           type="password"
+                           on-keydown="_submitOnEnter"
+              ></paper-input>
+              <paper-button class="action"
+                            disabled$="[[!userPassword]]"
+                            on-tap="createUserWithEmailAndPassword">
+                [[labelSignUp]]
+              </paper-button>
+              <paper-button class="cancel"
+                            on-tap="_closeDialog">
+                [[labelCancel]]
+              </paper-button>
+            </form>
           </iron-form>
         </section>
       </template>

@@ -1,4 +1,4 @@
-<link rel="import" href="../polymerfire/polymerfire.html">
+<link rel="import" href="../../polymerfire/polymerfire.html">
 
 <script>
   window.Fabric = window.Fabric || {};
@@ -1229,9 +1229,11 @@
 
       /**
        * Checks if there's any provider for the given email
+       *
+       * @return {Promise}
        */
       fetchEmailProviders() {
-        firebase
+        return firebase
           .auth()
           .fetchProvidersForEmail(this.userEmail)
           .then((data) => {
@@ -1257,10 +1259,11 @@
       /**
        * Sign In with email and password.
        *
-       *  @param {Object} e
+       * @param {Object} e
+       * @return {Promise}
        */
       signInWithEmailAndPassword(e) {
-        firebase.auth()
+        return firebase.auth()
           .signInWithEmailAndPassword(this.userEmail, this.userPassword)
           .catch((error) => {
             this.error = error;
@@ -1271,9 +1274,11 @@
 
       /**
        * Password reset.
+       *
+       * @return {Promise}
        */
       passwordReset() {
-        firebase.auth()
+        return firebase.auth()
           .sendPasswordResetEmail(this.userEmail)
           .then(() => this.selected = 'forgot-sent')
           .catch((error) => this.error = error);
@@ -1281,9 +1286,11 @@
 
       /**
        * Create user with email and password.
+       *
+       * @return {Promise}
        */
       createUserWithEmailAndPassword() {
-        firebase.auth()
+        return firebase.auth()
           .createUserWithEmailAndPassword(this.userEmail, this.userPassword)
           .catch((error) => {
             this.error = error;
@@ -1362,10 +1369,11 @@
 
       /**
        * sign out
+       * @return {Promise}
        */
       signOut() {
         this.error = null;
-        firebase.auth()
+        return firebase.auth()
           .signOut()
           .catch((error) => {
             this.error = error;

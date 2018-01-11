@@ -62,7 +62,6 @@
       const randomString = Math.random().toString(16).slice(2);
       const testEmail = randomString + '@mailinator.com';
       const testPass = 'fabricelements';
-      const testName = 'Fabric Elements';
       const element = fixture('SignupAuth');
 
       flush(() => {
@@ -74,10 +73,8 @@
         // its state.
         skeletonAuth.signOut().then(() => {
           const emailButton = skeletonAuth.shadowRoot.querySelector('.email');
-
           // Select the email/password auth method
           MockInteractions.tap(emailButton);
-
           // Set default value on the email input
           const emailInput = skeletonAuth
             .shadowRoot
@@ -87,19 +84,12 @@
           // Select the sign in email button
           const emailSignin = skeletonAuth
             .shadowRoot
-            .querySelector('[name="email-login"] .email');
-
+            .querySelector('[name="email-login"] .action');
           // Click to sign in
           MockInteractions.tap(emailSignin);
 
           // Wait for Firebase API response
           oncePropChanged(skeletonAuth, 'availableProviders').then(() => {
-            // Select the sign up name input
-            const nameInput = skeletonAuth
-              .shadowRoot
-              .querySelector('#signup-input-name');
-            nameInput.value = testName;
-
             // Select the sign up password input
             const passInput = skeletonAuth
               .shadowRoot
@@ -109,7 +99,7 @@
             // Select the sign up button
             const signupButton = skeletonAuth
               .shadowRoot
-              .querySelector('[name="email-signup"] .email');
+              .querySelector('[name="email-signup"] .action');
 
             // Click to sign in
             MockInteractions.tap(signupButton);

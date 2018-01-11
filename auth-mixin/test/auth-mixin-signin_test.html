@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>play-swipe-people test</title>
+
+  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../../../polymerfire/polymerfire.html">
+  <link rel="import" href="../../skeleton-auth.html">
+</head>
+<body>
+
+<test-fixture id="basicDefault">
+  <template>
+    <div>
+      <firebase-app
+        auth-domain="fabricelements.firebaseapp.com"
+        database-url="https://fabricelements.firebaseio.com"
+        api-key="AIzaSyCJRNdR0eodnswyi8MHCtF1YOjY235mhM8"
+        storage-bucket="fabricelements.appspot.com"
+      ></firebase-app>
+  
+      <skeleton-auth user-email="fabricelements@mailinator.com" user-password="fabricelements"></skeleton-auth>
+    </div>
+  </template>
+</test-fixture>
+
+<script>
+  suite('Basic behaviour', () => {
+    let element;
+    let demoElement;
+    setup(() => {
+      element = fixture('basicDefault');
+      demoElement = element.querySelector('skeleton-auth');
+    });
+    test('Should sign in/out with email/password', (done) => {
+      demoElement.signInWithEmailAndPassword().then(() => {
+        expect(demoElement.error).to.be.null;
+        done();
+      })
+      .catch(done);
+    });
+  });
+</script>
+
+</body>
+</html>

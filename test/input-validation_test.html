@@ -70,10 +70,8 @@
         // its state.
         skeletonAuth.signOut().then(() => {
           const emailButton = skeletonAuth.shadowRoot.querySelector('.email');
-
           // Select the email/password auth method
           MockInteractions.tap(emailButton);
-
           // Set default value on the email input
           const emailInput = skeletonAuth
             .shadowRoot
@@ -83,17 +81,13 @@
           // Select the sign in email button
           const emailSignin = skeletonAuth
             .shadowRoot
-            .querySelector('[name="email-login"] .email');
+            .querySelector('[name="email-login"] .action');
 
           // Click to sign in
           MockInteractions.tap(emailSignin);
 
           // Wait for Firebase API response
           oncePropChanged(skeletonAuth, 'availableProviders').then(() => {
-            const nameInput = skeletonAuth
-              .shadowRoot
-              .querySelector('#signup-input-name');
-
             // Select the password input
             const passInput = skeletonAuth
               .shadowRoot
@@ -106,17 +100,6 @@
 
             expect(signupForm.validate()).to.be.false;
 
-            nameInput.value = 'Fabric Elements';
-            passInput.value = '';
-
-            expect(signupForm.validate()).to.be.false;
-
-            nameInput.value = '';
-            passInput.value = 'fabricelements';
-
-            expect(signupForm.validate()).to.be.false;
-
-            nameInput.value = 'Fabric Elements';
             passInput.value = 'fabricelements';
 
             expect(signupForm.validate()).to.be.true;
