@@ -1157,32 +1157,28 @@
        * Google Sign-in function.
        */
       signInGoogle() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        this._signIn(provider);
+        this._signIn(new firebase.auth.GoogleAuthProvider());
       }
 
       /**
        * Facebook Sign-in function.
        */
       signInFacebook() {
-        const provider = new firebase.auth.FacebookAuthProvider();
-        this._signIn(provider);
+        this._signIn(new firebase.auth.FacebookAuthProvider());
       }
 
       /**
        * Twitter Sign-in function.
        */
       signInTwitter() {
-        const provider = new firebase.auth.TwitterAuthProvider();
-        this._signIn(provider);
+        this._signIn(new firebase.auth.TwitterAuthProvider());
       }
 
       /**
        * GitHub Sign-in function.
        */
       signInGitHub() {
-        const provider = new firebase.auth.GithubAuthProvider();
-        this._signIn(provider);
+        this._signIn(new firebase.auth.GithubAuthProvider());
       }
 
       /**
@@ -1195,7 +1191,7 @@
       /**
        * Sign In the user.
        *
-       *  @param {?String|any} provider
+       *  @param {firebase.auth.AuthProvider} provider
        */
       _signIn(provider) {
         let base;
@@ -1229,12 +1225,9 @@
 
       /**
        * Checks if there's any provider for the given email
-       *
-       * @return {Promise}
        */
       fetchEmailProviders() {
-        return firebase
-          .auth()
+        firebase.auth()
           .fetchProvidersForEmail(this.userEmail)
           .then((data) => {
             this.availableProviders = {
@@ -1260,10 +1253,9 @@
        * Sign In with email and password.
        *
        * @param {Object} e
-       * @return {Promise}
        */
       signInWithEmailAndPassword(e) {
-        return firebase.auth()
+        firebase.auth()
           .signInWithEmailAndPassword(this.userEmail, this.userPassword)
           .catch((error) => {
             this.error = error;
@@ -1274,11 +1266,9 @@
 
       /**
        * Password reset.
-       *
-       * @return {Promise}
        */
       passwordReset() {
-        return firebase.auth()
+        firebase.auth()
           .sendPasswordResetEmail(this.userEmail)
           .then(() => this.selected = 'forgot-sent')
           .catch((error) => this.error = error);
@@ -1286,11 +1276,9 @@
 
       /**
        * Create user with email and password.
-       *
-       * @return {Promise}
        */
       createUserWithEmailAndPassword() {
-        return firebase.auth()
+        firebase.auth()
           .createUserWithEmailAndPassword(this.userEmail, this.userPassword)
           .catch((error) => {
             this.error = error;
@@ -1302,25 +1290,9 @@
        * Sign In with phone number.
        */
       signInWithPhone() {
-        this._removeRecaptcha();
-        const recaptchaContainer = document.createElement('div');
-        recaptchaContainer.id = 'recaptchaContainer';
-        document.body.appendChild(recaptchaContainer);
-
-        if (!recaptchaContainer) {
-          this.error = new Error('Invalid recaptcha-container');
-          return;
-        }
-
-        const appVerifier = new firebase.auth.RecaptchaVerifier(
-          recaptchaContainer,
-          {size: 'invisible'}
-        );
-
         const phoneComplete = this.phoneCode + this.phoneNumber;
-
         firebase.auth()
-          .signInWithPhoneNumber(phoneComplete, appVerifier)
+          .signInWithPhoneNumber(phoneComplete, this._recaptchaVerifier())
           .then((confirmationResult) => {
             /**
              * SMS sent. Prompt user to type the code
@@ -1369,11 +1341,10 @@
 
       /**
        * sign out
-       * @return {Promise}
        */
       signOut() {
         this.error = null;
-        return firebase.auth()
+        firebase.auth()
           .signOut()
           .catch((error) => {
             this.error = error;
@@ -1424,6 +1395,40 @@
       _submitForm(event) {
         const form = event.target.closest('iron-form');
         if (form) form.fire('submit');
+      }
+
+      /**
+       * Recaptcha verifier
+       *
+       * @return {*}
+       * @private
+       */
+      _recaptchaVerifier() {
+        this._removeRecaptcha();
+        const container = document.createElement('div');
+        container.id = 'recaptchaContainer';
+        container.style.display = 'none';
+        document.body.appendChild(container);
+
+        if (!container) {
+          this.error = new Error('Invalid recaptcha-container');
+          return;
+        }
+        return new firebase.auth.RecaptchaVerifier(
+          container, {
+            'size': 'invisible',
+            'callback': (response) => {
+              // reCAPTCHA solved, allow signInWithPhoneNumber.
+              // onSignInSubmit();
+              console.log('demo captcha', response);
+            },
+            'expired-callback': () => {
+              // Reset reCAPTCHA?
+              this._recaptchaVerifier();
+              console.warn('expired recatpcha');
+            },
+          }
+        );
       }
     };
   };

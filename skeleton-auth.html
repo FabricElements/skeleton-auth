@@ -291,7 +291,7 @@
                              id="phone-input"
                              label="Phone number"
                              prevent-invalid-input
-                             type="number"
+                             type="tel"
                              on-keydown="_submitOnEnter"
                 ></paper-input>
               </div>
@@ -318,6 +318,8 @@
                            label="6-digit code"
                            type="number"
                            on-keydown="_submitOnEnter"
+                           minlength="6"
+                           maxlength="6"
               ></paper-input>
               <paper-button class="action"
                             on-tap="confirmCode"
