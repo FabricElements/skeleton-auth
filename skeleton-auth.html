@@ -286,12 +286,15 @@
                   </select>
                 </label>
                 <paper-input value="{{phoneNumber}}"
-                             allowed-pattern="[\d]"
                              autofocus
                              id="phone-input"
                              label="Phone number"
+                             type="phone"
+                             allowed-pattern="[\d]"
+                             pattern="\d*"
+                             minlength="4"
+                             maxlength="12"
                              prevent-invalid-input
-                             type="tel"
                              on-keydown="_submitOnEnter"
                 ></paper-input>
               </div>
@@ -316,10 +319,13 @@
               <paper-input value="{{confirmationCode}}"
                            autofocus
                            label="6-digit code"
-                           type="number"
                            on-keydown="_submitOnEnter"
+                           type="number"
                            minlength="6"
                            maxlength="6"
+                           allowed-pattern="[\d]"
+                           pattern="\d*"
+                           prevent-invalid-input
               ></paper-input>
               <paper-button class="action"
                             on-tap="confirmCode"
