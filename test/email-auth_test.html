@@ -6,13 +6,11 @@
 
   <title>skeleton-auth test</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../iron-test-helpers/mock-interactions.js"></script>
-
-  <script src="../../firebase/firebase.js"></script>
-  <script src="../../firebase-config/index.js" async></script>
-  <link rel="import" href="../skeleton-auth.html">
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/wct-browser-legacy/browser.js"></script>
+  <script src="../node_modules/firebase/firebase.js"></script>
+  <script src="../node_modules/@fabricelements/firebase-config/index.js"></script>
+  <script type="module" src="../skeleton-auth.js"></script>
 </head>
 <body>
 
@@ -21,7 +19,7 @@
     <skeleton-auth email></skeleton-auth>
   </template>
 </test-fixture>
-<script>
+<script type="module">
   const oncePropChanged = (el, prop) => {
     return new Promise((resolve, reject) => {
       const dashedPropName = prop

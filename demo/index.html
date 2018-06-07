@@ -6,26 +6,27 @@
         content="width=device-width, minimum-scale=1, maximum-scale=1, initial-scale=1, user-scalable=no">
   <title>skeleton-auth demo</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../firebase/firebase.js"></script>
-  <script src="../../firebase-config/index.js" async></script>
-
-  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
-  <link rel="import" href="../../polymer/lib/elements/custom-style.html">
-  <link rel="import" href="../../polymer/lib/elements/dom-if.html">
-  <link rel="import" href="../../paper-button/paper-button.html">
-  <link rel="import" href="../../paper-input/paper-input.html">
-  <link rel="import" href="../../paper-item/paper-item.html">
-  <link rel="import" href="../../paper-item/paper-item-body.html">
-  <link rel="import" href="../../paper-item/paper-icon-item.html">
-  <link rel="import" href="../../iron-icons/iron-icons.html">
-  <link rel="import" href="../../iron-icons/communication-icons.html">
-  <link rel="import" href="../../iron-image/iron-image.html">
-
-  <link rel="import" href="../skeleton-auth.html">
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/firebase/firebase.js"></script>
+  <script src="../node_modules/@fabricelements/firebase-config/index.js"></script>
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '@polymer/iron-demo-helpers/demo-snippet.js';
+    import '@polymer/polymer/lib/elements/dom-bind.js';
+    import '@polymer/polymer/lib/elements/dom-if.js';
+    import '@polymer/paper-button/paper-button.js';
+    import '@polymer/paper-input/paper-input.js';
+    import '@polymer/paper-item/paper-item.js';
+    import '@polymer/paper-item/paper-item-body.js';
+    import '@polymer/paper-item/paper-icon-item.js';
+    import '@polymer/iron-icons/iron-icons.js';
+    import '@polymer/iron-icons/communication-icons.js';
+    import '@polymer/iron-image/iron-image.js';
+  </script>
+  <script type="module" src="../skeleton-auth.js"></script>
 
   <custom-style>
-    <style is="custom-style">
+    <style is="custom-style" include="demo-pages-shared-styles">
       html,
       body {
         font-family: "Roboto", sans-serif;
@@ -54,12 +55,6 @@
         width: 40px;
       }
 
-      .container {
-        margin: 0 auto;
-        max-width: 500px;
-        min-height: 100vh;
-      }
-
       h3 {
         border-bottom: 1px solid var(--paper-grey-400);
         padding-bottom: 1rem;
@@ -75,29 +70,33 @@
           padding: 10px 15px;
         };
       }
+
+      [hidden] {
+        display: none;
+      }
     </style>
   </custom-style>
 </head>
 <body>
-<div class="container">
-  <h3 class="paper-font-display1">Basic skeleton-auth demo</h3>
-  <dom-bind>
-    <template>
-      <skeleton-auth google
-                     facebook
-                     twitter
-                     github
-                     anonymous
-                     email
-                     phone
-                     popup
-                     on-error="handleError"
-                     hidden$="[[signedIn]]">
-      </skeleton-auth>
 
-      <dom-if if="[[signedIn]]">
+<div class="vertical-section-container centered">
+  <h3>Basic skeleton-auth demo</h3>
+  <demo-snippet>
+    <template>
+      <dom-bind>
         <template>
-          <div id="userBox">
+          <skeleton-auth google
+                         facebook
+                         twitter
+                         github
+                         anonymous
+                         email
+                         phone
+                         popup
+                         signed-in="{{signedIn}}"
+                         user="{{user}}">
+          </skeleton-auth>
+          <div id="userBox" hidden$="[[!signedIn]]">
             <paper-icon-item>
               <iron-image placeholder="http://lorempixel.com/100/100"
                           sizing="cover" preload src$="[[user.photoURL]]" slot="item-icon"></iron-image>
@@ -132,46 +131,46 @@
             <paper-button onclick="signOut()">Sign Out</paper-button>
             <paper-button onclick="getToken()">Get token</paper-button>
           </div>
-          <script>
-            /* eslint-disable no-unused-vars*/
-
-            /**
-             * Sign Out
-             *
-             * @private
-             */
-            function signOut() {
-              const element = document.querySelector('skeleton-auth');
-              element.signOut();
-            }
-
-            /**
-             * jsonLog
-             *
-             * @param {Object} object
-             * @private
-             */
-            function jsonLog(object) {
-              console.log(object);
-            }
-
-            /**
-             * Get Token
-             *
-             * @private
-             */
-            function getToken() {
-              firebase.auth().currentUser.getIdToken(true).then(function(token) {
-//            console.log('with ID token', token);
-                const element = document.querySelector('#token');
-                element.value = token;
-              });
-            }
-          </script>
         </template>
-      </dom-if>
+      </dom-bind>
     </template>
-  </dom-bind>
+  </demo-snippet>
 </div>
+<script>
+  /* eslint-disable no-unused-vars*/
+
+  /**
+   * Sign Out
+   *
+   * @private
+   */
+  function signOut() {
+    const element = document.querySelector('skeleton-auth');
+    element.signOut();
+  }
+
+  /**
+   * jsonLog
+   *
+   * @param {Object} object
+   * @private
+   */
+  function jsonLog(object) {
+    console.log(object);
+  }
+
+  /**
+   * Get Token
+   *
+   * @private
+   */
+  function getToken() {
+    firebase.auth().currentUser.getIdToken(true).then(function(token) {
+//            console.log('with ID token', token);
+      const element = document.querySelector('#token');
+      element.value = token;
+    });
+  }
+</script>
 </body>
 </html>

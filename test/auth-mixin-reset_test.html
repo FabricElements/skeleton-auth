@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>play-swipe-people test</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/wct-browser-legacy/browser.js"></script>
+  <script src="../node_modules/firebase/firebase.js"></script>
+  <script src="../node_modules/@fabricelements/firebase-config/index.js"></script>
+  <script type="module" src="../skeleton-auth.js"></script>
+</head>
+<body>
+
+<test-fixture id="basicDefault">
+  <template>
+    <skeleton-auth user-email="fabricelements@mailinator.com"></skeleton-auth>
+  </template>
+</test-fixture>
+
+<script type="module">
+  suite('Basic behaviour', () => {
+    let element;
+    setup(() => {
+      element = fixture('basicDefault');
+    });
+    test('Should send password reset email', () => {
+      element.passwordReset();
+      expect(element.error).to.be.null;
+    });
+  });
+</script>
+</body>
+</html>

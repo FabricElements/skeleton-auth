@@ -1,18 +1,55 @@
 {
-  "name": "name",
+  "description": "Minimal Sign in module using polymer and firebase",
+  "name": "@fabricelements/skeleton-auth",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FabricElements/skeleton-auth.git"
+  },
   "version": "0.0.1",
   "license": "BSD-3-Clause",
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0",
+    "@webcomponents/webcomponentsjs": "2.0.0-beta.2"
+  },
+  "main": "skeleton-auth.js",
+  "dependencies": {
+    "@polymer/gen-typescript-declarations": "^1.2.2",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.18",
+    "@polymer/iron-form": "^3.0.0-pre.18",
+    "@polymer/iron-icons": "^3.0.0-pre.18",
+    "@polymer/iron-pages": "^3.0.0-pre.18",
+    "@polymer/paper-button": "^3.0.0-pre.18",
+    "@polymer/paper-dropdown-menu": "^3.0.0-pre.18",
+    "@polymer/paper-input": "^3.0.0-pre.18",
+    "@polymer/paper-item": "^3.0.0-pre.18",
+    "@polymer/paper-listbox": "^3.0.0-pre.18",
+    "@polymer/polymer": "^3.0.0",
+    "@types/polymer": "^1.2.4",
+    "firebase": "^5.0.4",
+    "web-animations-js": "^2.3.1"
+  },
   "devDependencies": {
-    "eslint": "^4.18.0",
+    "@fabricelements/firebase-config": "^0.0.1",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.18",
+    "@polymer/iron-image": "^3.0.0-pre.18",
+    "@polymer/iron-test-helpers": "^3.0.0-pre.18",
+    "@polymer/paper-item": "^3.0.0-pre.18",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "eslint": "^4.12.1",
     "eslint-config-google": "^0.9.1",
-    "eslint-plugin-html": "^3.2.2"
+    "eslint-plugin-html": "^4.0.3",
+    "lodash": "^4.17.10",
+    "wct-browser-legacy": "^1.0.0"
   },
   "scripts": {
     "lint": "npm run lint:javascript && polymer lint",
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
-    "test": "polymer test",
+    "test": "polymer test --npm --skip-plugin sauce",
     "test:integration": "polymer build # test that psk builds without error with the CLI",
-    "serve": "polymer serve -H 0.0.0.0"
-  },
-  "dependencies": {}
+    "serve": "polymer serve -H 0.0.0.0",
+    "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
+  }
 }

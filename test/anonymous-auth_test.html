@@ -6,13 +6,11 @@
 
   <title>skeleton-auth test</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../iron-test-helpers/mock-interactions.js"></script>
-
-  <script src="../../firebase/firebase.js"></script>
-  <script src="../../firebase-config/index.js" async></script>
-  <link rel="import" href="../skeleton-auth.html">
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/wct-browser-legacy/browser.js"></script>
+  <script src="../node_modules/firebase/firebase.js"></script>
+  <script src="../node_modules/@fabricelements/firebase-config/index.js"></script>
+  <script type="module" src="../skeleton-auth.js"></script>
 </head>
 <body>
 
@@ -21,7 +19,7 @@
     <skeleton-auth anonymous></skeleton-auth>
   </template>
 </test-fixture>
-<script>
+<script type="module">
   const oncePropChanged = (el, prop) => {
     return new Promise((resolve, reject) => {
       const dashedPropName = prop
@@ -42,45 +40,44 @@
   };
 
   suite('Sign In with anonymous provider', () => {
+    let element;
+    setup(() => {
+      element = fixture('AnonymousAuth');
+    });
     test('Sign in anonymously', (done) => {
-      const element = fixture('AnonymousAuth');
       flush(() => {
-        const skeletonAuth = element.querySelector('skeleton-auth');
-
         // Fist sign OUT any already logged-in user, since all tests run in a
         // single browser session/window and firebase uses localStorage to keep
         // its state.
-        skeletonAuth.signOut().then(() => {
-          const anonymousButton = skeletonAuth
-            .shadowRoot
-            .querySelector('.anonymous');
+        element.signOut();
+        const anonymousButton = element
+          .shadowRoot
+          .querySelector('.anonymous');
 
-          // Expect client isn't authenticated
-          expect(skeletonAuth.signedIn).to.equal(false);
+        // Expect client isn't authenticated
+        expect(element.signedIn).to.equal(false);
 
-          // Watch to changes on the auth status bofore clicking the button
-          oncePropChanged(skeletonAuth, 'signedIn').then(() => {
-            // firebase#signout resolves this promise before setting signedIn
-            // to false. That makes this event listener to trigger before
-            // actually doing the login (when signedIn goes from false -> true).
-            return skeletonAuth.signedIn
-              // If signedIn is true, we can do our asserts right ahead
-              ? Promise.resolve()
-              // If not, we listen again for signedIn to go from false -> true
-              : oncePropChanged(skeletonAuth, 'signedIn');
-          })
-            .then(() => {
-              expect(skeletonAuth.user.uid).to.be.ok;
-
-              expect(skeletonAuth.signedIn).to.equal(true);
-              done();
-            })
-            .catch(done);
-
-          // Select the email/password auth method
-          MockInteractions.tap(anonymousButton);
+        // Watch to changes on the auth status bofore clicking the button
+        oncePropChanged(element, 'signedIn').then(() => {
+          // firebase#signout resolves this promise before setting signedIn
+          // to false. That makes this event listener to trigger before
+          // actually doing the login (when signedIn goes from false -> true).
+          return element.signedIn
+            // If signedIn is true, we can do our asserts right ahead
+            ? Promise.resolve()
+            // If not, we listen again for signedIn to go from false -> true
+            : oncePropChanged(element, 'signedIn');
         })
+          .then(() => {
+            expect(element.user.uid).to.be.ok;
+
+            expect(element.signedIn).to.equal(true);
+            done();
+          })
           .catch(done);
+
+        // Select the email/password auth method
+        MockInteractions.tap(anonymousButton);
       });
     });
   });
