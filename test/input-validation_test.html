@@ -10,32 +10,15 @@
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
-  <link rel="import" href="../../polymerfire/polymerfire.html">
+  <script src="../../firebase/firebase.js"></script>
+  <script src="../../firebase-config/index.js" async></script>
   <link rel="import" href="../skeleton-auth.html">
 </head>
 <body>
 
 <test-fixture id="SignupAuth">
   <template>
-    <div>
-      <firebase-app
-        auth-domain="fabricelements.firebaseapp.com"
-        database-url="https://fabricelements.firebaseio.com"
-        api-key="AIzaSyCJRNdR0eodnswyi8MHCtF1YOjY235mhM8"
-        storage-bucket="fabricelements.appspot.com"
-      ></firebase-app>
-  
-      <firebase-auth    
-        signed-in="{{signedIn}}">
-      </firebase-auth>
-  
-      <dom-if if="[[!signedIn]]">
-        <template>
-          <skeleton-auth email>
-          </skeleton-auth>
-        </template>
-      </dom-if>
-    </div>
+    <skeleton-auth email></skeleton-auth>
   </template>
 </test-fixture>
 <script>
@@ -104,10 +87,8 @@
 
             expect(signupForm.validate()).to.be.true;
             done();
-          })
-          .catch(done);
-        })
-        .catch(done);
+          }).catch(done);
+        }).catch(done);
       });
     });
   });

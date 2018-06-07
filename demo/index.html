@@ -7,13 +7,12 @@
   <title>skeleton-auth demo</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../firebase/firebase.js"></script>
+  <script src="../../firebase-config/index.js" async></script>
 
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
   <link rel="import" href="../../polymer/lib/elements/custom-style.html">
   <link rel="import" href="../../polymer/lib/elements/dom-if.html">
-  <link rel="import" href="../../polymerfire/polymerfire.html">
   <link rel="import" href="../../paper-button/paper-button.html">
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-item/paper-item.html">
@@ -26,7 +25,7 @@
   <link rel="import" href="../skeleton-auth.html">
 
   <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
+    <style is="custom-style">
       html,
       body {
         font-family: "Roboto", sans-serif;
@@ -82,39 +81,19 @@
 <body>
 <div class="container">
   <h3 class="paper-font-display1">Basic skeleton-auth demo</h3>
-
   <dom-bind>
     <template>
-      <!-- Configure Firebase app: -->
-      <firebase-app
-        auth-domain="fabricelements.firebaseapp.com"
-        database-url="https://fabricelements.firebaseio.com"
-        api-key="AIzaSyCJRNdR0eodnswyi8MHCtF1YOjY235mhM8"
-        storage-bucket="fabricelements.appspot.com"
-        messagingSenderId="908593247251"
-      ></firebase-app>
-
-      <firebase-auth
-        signed-in="{{signedIn}}"
-        user="{{user}}"
-        on-error="handleError">
-      </firebase-auth>
-
-      <dom-if if="[[!signedIn]]">
-        <template>
-          <skeleton-auth google
-                         facebook
-                         twitter
-                         github
-                         anonymous
-                         email
-                         phone
-                         popup
-                         on-error="handleError">
-          </skeleton-auth>
-        </template>
-      </dom-if>
-
+      <skeleton-auth google
+                     facebook
+                     twitter
+                     github
+                     anonymous
+                     email
+                     phone
+                     popup
+                     on-error="handleError"
+                     hidden$="[[signedIn]]">
+      </skeleton-auth>
 
       <dom-if if="[[signedIn]]">
         <template>
@@ -153,49 +132,44 @@
             <paper-button onclick="signOut()">Sign Out</paper-button>
             <paper-button onclick="getToken()">Get token</paper-button>
           </div>
+          <script>
+            /* eslint-disable no-unused-vars*/
 
+            /**
+             * Sign Out
+             *
+             * @private
+             */
+            function signOut() {
+              const element = document.querySelector('skeleton-auth');
+              element.signOut();
+            }
+
+            /**
+             * jsonLog
+             *
+             * @param {Object} object
+             * @private
+             */
+            function jsonLog(object) {
+              console.log(object);
+            }
+
+            /**
+             * Get Token
+             *
+             * @private
+             */
+            function getToken() {
+              firebase.auth().currentUser.getIdToken(true).then(function(token) {
+//            console.log('with ID token', token);
+                const element = document.querySelector('#token');
+                element.value = token;
+              });
+            }
+          </script>
         </template>
       </dom-if>
-
-      <script>
-        /* eslint-disable no-unused-vars*/
-
-        const domIf = document.querySelector('dom-if');
-        domIf.if = false;
-
-        /**
-         * Sign Out
-         *
-         * @private
-         */
-        function signOut() {
-          const element = document.querySelector('skeleton-auth');
-          element.signOut();
-        }
-
-        /**
-         * jsonLog
-         *
-         * @param {Object} object
-         * @private
-         */
-        function jsonLog(object) {
-          console.log(object);
-        }
-
-        /**
-         * Get Token
-         *
-         * @private
-         */
-        function getToken() {
-          firebase.auth().currentUser.getIdToken(true).then(function(token) {
-//            console.log('with ID token', token);
-            const element = document.querySelector('#token');
-            element.value = token;
-          });
-        }
-      </script>
     </template>
   </dom-bind>
 </div>

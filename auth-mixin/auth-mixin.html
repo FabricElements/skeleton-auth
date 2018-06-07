@@ -1,5 +1,3 @@
-<link rel="import" href="../../polymerfire/polymerfire.html">
-
 <script>
   window.Fabric = window.Fabric || {};
 
@@ -154,6 +152,24 @@
           confirmationCode: {
             type: String,
             value: null,
+          },
+          /*
+           * User object
+           */
+          user: {
+            type: Object,
+            value: null,
+            notify: true,
+            reflectToAttribute: true,
+          },
+          /*
+           * User is signedIn
+           */
+          signedIn: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true,
           },
           /*
            * Country dial codes.
@@ -1139,18 +1155,20 @@
       /**
        * Constructor
        */
-      ready() {
-        super.ready();
-        firebase.auth()
-          .getRedirectResult()
-          .catch((error) => {
-            if (error.code === 'auth/account-exists-with-different-credential') {
-              this.userEmail = error.email;
-              this.fetchEmailProviders();
-            }
-          });
-        // Clear on state change
-        firebase.auth().onAuthStateChanged(() => this.clear());
+      connectedCallback() {
+        super.connectedCallback();
+        firebase.auth().onAuthStateChanged((user) => {
+          this.user = user ? user : null;
+          this.signedIn = !(!user);
+          // Clear on state change
+          this.clear();
+        });
+        firebase.auth().getRedirectResult().catch((error) => {
+          if (error.code === 'auth/account-exists-with-different-credential') {
+            this.userEmail = error.email;
+            this.fetchEmailProviders();
+          }
+        });
       }
 
       /**
