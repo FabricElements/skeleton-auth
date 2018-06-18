@@ -6,11 +6,15 @@
 
   <title>skeleton-auth test</title>
 
-  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
   <script src="../node_modules/wct-browser-legacy/browser.js"></script>
   <script src="../node_modules/firebase/firebase.js"></script>
   <script src="../node_modules/@fabricelements/firebase-config/index.js"></script>
-  <script type="module" src="../skeleton-auth.js"></script>
+
+  <script type="module">
+    import '@polymer/iron-test-helpers/mock-interactions.js';
+    import '../skeleton-auth.js';
+  </script>
 </head>
 <body>
 
@@ -19,7 +23,8 @@
     <skeleton-auth email></skeleton-auth>
   </template>
 </test-fixture>
-<script type="module">
+
+<script>
   const oncePropChanged = (el, prop) => {
     return new Promise((resolve, reject) => {
       const dashedPropName = prop
@@ -38,54 +43,54 @@
       }
     });
   };
+
   suite('Input validations', () => {
+    let element;
+    const testEmail = 'test-fabric@mailinator.com';
+    setup(() => {
+      element = fixture('SignupAuth');
+      // Fist sign OUT any already logged-in user, since all tests run in a
+      // single browser session/window and firebase uses localStorage to keep
+      // its state.
+      firebase.auth().signOut();
+    });
     test('Should validate sign up form inputs', (done) => {
-      const testEmail = 'test-fabric@mailinator.com';
-      const element = fixture('SignupAuth');
-
       flush(() => {
-        const skeletonAuth = element.querySelector('skeleton-auth');
+        const emailButton = element.shadowRoot.querySelector('.email');
+        // Select the email/password auth method
+        MockInteractions.tap(emailButton);
+        // Set default value on the email input
+        const emailInput = element
+          .shadowRoot
+          .querySelector('#login-input-mail');
+        emailInput.value = testEmail;
 
-        // Fist sign OUT any already logged-in user, since all tests run in a
-        // single browser session/window and firebase uses localStorage to keep
-        // its state.
-        skeletonAuth.signOut().then(() => {
-          const emailButton = skeletonAuth.shadowRoot.querySelector('.email');
-          // Select the email/password auth method
-          MockInteractions.tap(emailButton);
-          // Set default value on the email input
-          const emailInput = skeletonAuth
+        // Select the sign in email button
+        const emailSignin = element
+          .shadowRoot
+          .querySelector('[name="email-login"] .action');
+
+        // Click to sign in
+        MockInteractions.tap(emailSignin);
+
+        // Wait for Firebase API response
+        oncePropChanged(element, 'availableProviders').then(() => {
+          // Select the password input
+          const passInput = element
             .shadowRoot
-            .querySelector('#login-input-mail');
-          emailInput.value = testEmail;
+            .querySelector('#signup-input-pass');
 
-          // Select the sign in email button
-          const emailSignin = skeletonAuth
+          // Select the Sign Up form
+          const signupForm = element
             .shadowRoot
-            .querySelector('[name="email-login"] .action');
+            .querySelector('#email-signup-form');
 
-          // Click to sign in
-          MockInteractions.tap(emailSignin);
+          expect(signupForm.validate()).to.be.false;
 
-          // Wait for Firebase API response
-          oncePropChanged(skeletonAuth, 'availableProviders').then(() => {
-            // Select the password input
-            const passInput = skeletonAuth
-              .shadowRoot
-              .querySelector('#signup-input-pass');
+          passInput.value = 'fabricelements';
 
-            // Select the Sign Up form
-            const signupForm = skeletonAuth
-              .shadowRoot
-              .querySelector('#email-signup-form');
-
-            expect(signupForm.validate()).to.be.false;
-
-            passInput.value = 'fabricelements';
-
-            expect(signupForm.validate()).to.be.true;
-            done();
-          }).catch(done);
+          expect(signupForm.validate()).to.be.true;
+          done();
         }).catch(done);
       });
     });
