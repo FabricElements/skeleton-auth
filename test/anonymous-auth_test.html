@@ -6,11 +6,15 @@
 
   <title>skeleton-auth test</title>
 
-  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
   <script src="../node_modules/wct-browser-legacy/browser.js"></script>
   <script src="../node_modules/firebase/firebase.js"></script>
   <script src="../node_modules/@fabricelements/firebase-config/index.js"></script>
-  <script type="module" src="../skeleton-auth.js"></script>
+
+  <script type="module">
+    import '@polymer/iron-test-helpers/mock-interactions.js';
+    import '../skeleton-auth.js';
+  </script>
 </head>
 <body>
 
@@ -19,7 +23,8 @@
     <skeleton-auth anonymous></skeleton-auth>
   </template>
 </test-fixture>
-<script type="module">
+
+<script>
   const oncePropChanged = (el, prop) => {
     return new Promise((resolve, reject) => {
       const dashedPropName = prop
@@ -43,13 +48,13 @@
     let element;
     setup(() => {
       element = fixture('AnonymousAuth');
+      // Fist sign OUT any already logged-in user, since all tests run in a
+      // single browser session/window and firebase uses localStorage to keep
+      // its state.
+      firebase.auth().signOut();
     });
     test('Sign in anonymously', (done) => {
       flush(() => {
-        // Fist sign OUT any already logged-in user, since all tests run in a
-        // single browser session/window and firebase uses localStorage to keep
-        // its state.
-        element.signOut();
         const anonymousButton = element
           .shadowRoot
           .querySelector('.anonymous');
@@ -67,15 +72,13 @@
             ? Promise.resolve()
             // If not, we listen again for signedIn to go from false -> true
             : oncePropChanged(element, 'signedIn');
+        }).then(() => {
+          expect(element.user.uid).to.be.ok;
+
+          expect(element.signedIn).to.equal(true);
+          done();
         })
-          .then(() => {
-            expect(element.user.uid).to.be.ok;
-
-            expect(element.signedIn).to.equal(true);
-            done();
-          })
-          .catch(done);
-
+        .catch(done);
         // Select the email/password auth method
         MockInteractions.tap(anonymousButton);
       });
