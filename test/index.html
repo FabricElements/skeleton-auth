@@ -12,13 +12,17 @@
 <script>
   // Load and run all tests (.html, .js):
   WCT.loadSuites([
-    'signup-auth_test.html',
-    'anonymous-auth_test.html',
-    'input-validation_test.html',
-    'email-auth_test.html',
-    //'auth-mixin-signin_test.html',
-    //'auth-mixin-reset_test.html', // done
-    //'auth-mixin-signup_test.html',
+    'signup-auth_test.html?dom=shadow',
+    'signup-auth_test.html?wc-shadydom=true&wc-ce=true',
+    'anonymous-auth_test.html?dom=shadow',
+    'anonymous-auth_test.html?wc-shadydom=true&wc-ce=true',
+    'input-validation_test.html?dom=shadow',
+    'input-validation_test.html?wc-shadydom=true&wc-ce=true',
+    'email-auth_test.html?dom=shadow',
+    'email-auth_test.html?wc-shadydom=true&wc-ce=true',
+    // 'auth-mixin-signin_test.html',
+    // 'auth-mixin-reset_test.html', // done
+    // 'auth-mixin-signup_test.html',
   ]);
 </script>
 

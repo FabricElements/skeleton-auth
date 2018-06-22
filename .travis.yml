@@ -1,17 +1,28 @@
-notifications:
-  email: false
 language: node_js
-sudo: false
-node_js: stable
+node_js: '9'
+sudo: 'false'
+cache:
+  directories:
+    - node_modules
+dist: trusty
 addons:
   firefox: latest
+  chrome: stable
   apt:
     sources:
       - google-chrome
     packages:
       - google-chrome-stable
+notifications:
+  email: false
 before_script:
-  - npm install -g polymer-cli web-component-tester
+  - npm install -g polymer-cli
+  - polymer install
   - npm run lint
-script: xvfb-run wct --module-resolution=node --npm --skip-plugin sauce
+  - >-
+    npm run update-types && git diff --exit-code || (echo -e
+    '\n\033[31mERROR:\033[0m Typings are stale. Please run "npm run
+    update-types".' && false)
+script:
+  - xvfb-run polymer test --skip-plugin sauce
 
