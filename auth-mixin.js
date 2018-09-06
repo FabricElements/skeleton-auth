@@ -1,4 +1,8 @@
+// import * as firebase from 'firebase';
+// import 'firebase/dist/index.esm.js';
+// import * as firebase from 'firebase/firebase.js';
 window.Fabric = window.Fabric || {};
+const firebase = window.firebase;
 
 /**
  * `Fabric.AuthMixin`
@@ -1454,7 +1458,7 @@ Fabric.AuthMixin = (superClass) => class extends superClass {
           this._recaptchaVerifier();
           console.warn('expired recatpcha');
         },
-      }
+      },
     );
   }
 };
